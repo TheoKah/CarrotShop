@@ -8,6 +8,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
@@ -21,7 +22,7 @@ import yt.helloworld.carrotshop.shop.Shop;
 
 
 public class PlayerClickListener {
-	@Listener
+	@Listener(order=Order.FIRST)
 	public void onPlayerRightClick(InteractBlockEvent.Secondary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
@@ -33,7 +34,7 @@ public class PlayerClickListener {
 			if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {
 				event.setCancelled(true);
 				shop.get().trigger(player);
-				Sponge.getScheduler().createTaskBuilder().delayTicks(1).execute(
+				Sponge.getScheduler().createTaskBuilder().delayTicks(4).execute(
 						task -> {
 							shop.get().update();
 							task.cancel();
@@ -42,7 +43,7 @@ public class PlayerClickListener {
 		}
 	}
 
-	@Listener
+	@Listener(order=Order.FIRST)
 	public void onPlayerLeftClick(InteractBlockEvent.Primary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();

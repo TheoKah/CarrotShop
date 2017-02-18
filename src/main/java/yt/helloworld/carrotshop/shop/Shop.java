@@ -26,6 +26,7 @@ import org.spongepowered.api.world.extent.Extent;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import yt.helloworld.carrotshop.CarrotShop;
 import yt.helloworld.carrotshop.ShopsData;
 
 @ConfigSerializable
@@ -153,32 +154,41 @@ public abstract class Shop {
 				SignData signData = data.get();
 				Shop shop;
 				try {
+					boolean needEconomy = false;
 					switch (signData.lines().get(0).toPlain().toLowerCase()) {
 					case "[itrade]":
 						shop = new iTrade(player, target);
 						break;
 					case "[ibuy]":
+						needEconomy = true;
 						shop = new iBuy(player, target);
 						break;
 					case "[isell]":
+						needEconomy = true;
 						shop = new iSell(player, target);
 						break;
 					case "[trade]":
 						shop = new Trade(player, target);
 						break;
 					case "[buy]":
+						needEconomy = true;
 						shop = new Buy(player, target);
 						break;
 					case "[sell]":
+						needEconomy = true;
 						shop = new Sell(player, target);
 						break;
 					default:
+						return false;
+					}
+					if (needEconomy && CarrotShop.getEcoService() == null) {
 						return false;
 					}
 				} catch (ExceptionInInitializerError e) {
 					player.sendMessage(Text.of(TextColors.DARK_RED, e.getMessage()));
 					return false;
 				}
+				
 				for (Location<World> loc : shop.getLocations()) {
 					Optional<Shop> oldShop = ShopsData.getShop(loc);
 					if (oldShop.isPresent()) {

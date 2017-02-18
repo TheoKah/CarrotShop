@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 import yt.helloworld.carrotshop.listener.BlockBreakListener;
 import yt.helloworld.carrotshop.listener.PlayerClickListener;
 
-@Plugin(id = "carrotshop", name = "CarrotShop", version = "1.0", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
+@Plugin(id = "carrotshop", name = "CarrotShop", version = "1.2", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
 public class CarrotShop {
 	private File rootDir;
 
