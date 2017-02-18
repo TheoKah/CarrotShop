@@ -1,4 +1,4 @@
-package yt.helloworld.carrotshop.shop;
+package com.carrot.carrotshop.shop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,11 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
+import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopsData;
+
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import yt.helloworld.carrotshop.CarrotShop;
-import yt.helloworld.carrotshop.ShopsData;
 
 @ConfigSerializable
 public abstract class Shop {

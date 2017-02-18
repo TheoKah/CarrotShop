@@ -1,4 +1,4 @@
-package yt.helloworld.carrotshop.shop;
+package com.carrot.carrotshop.shop;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,13 +21,14 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopsData;
+
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import yt.helloworld.carrotshop.CarrotShop;
-import yt.helloworld.carrotshop.ShopsData;
 
 @ConfigSerializable
-public class Sell extends Shop {
+public class Buy extends Shop {
 	@Setting
 	private Inventory itemsTemplate;
 	@Setting
@@ -35,17 +36,17 @@ public class Sell extends Shop {
 	@Setting
 	private int price;
 
-	public Sell() {
+	public Buy() {
 	}
 
-	public Sell(Player player, Location<World> sign) throws ExceptionInInitializerError {
+	public Buy(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.isEmpty())
-			throw new ExceptionInInitializerError("Sell signs require a chest");
+			throw new ExceptionInInitializerError("Buy signs require a chest");
 		Optional<TileEntity> chestOpt = locations.peek().getTileEntity();
 		if (!chestOpt.isPresent() || !(chestOpt.get() instanceof TileEntityCarrier))
-			throw new ExceptionInInitializerError("Sell signs require a chest");
+			throw new ExceptionInInitializerError("Buy signs require a chest");
 		Inventory items = ((TileEntityCarrier) chestOpt.get()).getInventory();
 		if (items.totalItems() == 0)
 			throw new ExceptionInInitializerError("chest cannot be empty");
@@ -60,7 +61,7 @@ public class Sell extends Shop {
 		}
 		setOwner(player);
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a Sell shop:"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a Buy shop:"));
 		info(player);
 	}
 
@@ -75,8 +76,7 @@ public class Sell extends Shop {
 	public boolean update() {
 		Optional<TileEntity> chest = sellerChest.getTileEntity();
 		if (chest.isPresent() && chest.get() instanceof TileEntityCarrier) {
-			Inventory chestInv = ((TileEntityCarrier) chest.get()).getInventory();
-			if (chestInv.capacity() - chestInv.size() >= itemsTemplate.size()) {
+			if (hasEnough(((TileEntityCarrier) chest.get()).getInventory(), itemsTemplate)) {
 				setOK();
 				return true;
 			}
@@ -88,7 +88,7 @@ public class Sell extends Shop {
 	@Override
 	public void info(Player player) {
 		Builder builder = Text.builder();
-		builder.append(Text.of("Sell"));
+		builder.append(Text.of("Buy"));
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
@@ -97,47 +97,44 @@ public class Sell extends Shop {
 		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
 		player.sendMessage(builder.build());
 		if (!update())
-			player.sendMessage(Text.of(TextColors.GOLD, "This shop is full!"));
+			player.sendMessage(Text.of(TextColors.GOLD, "This shop is empty!"));
 
 	}
 	@Override
 	public boolean trigger(Player player) {
-		if (!hasEnough(player.getInventory(), itemsTemplate)) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have the items to sell!"));
-			return false;
-		}
-		Optional<TileEntity> chest = sellerChest.getTileEntity();
-		if (chest.isPresent() && chest.get() instanceof TileEntityCarrier) {
-			Inventory chestInv = ((TileEntityCarrier) chest.get()).getInventory();
-			if (chestInv.capacity() - chestInv.size() < itemsTemplate.size()) {
-				player.sendMessage(Text.of(TextColors.GOLD, "This shop is full!"));
+		Optional<TileEntity> chestToGive = sellerChest.getTileEntity();
+		if (chestToGive.isPresent() && chestToGive.get() instanceof TileEntityCarrier) {
+			if (!hasEnough(((TileEntityCarrier) chestToGive.get()).getInventory(), itemsTemplate)) {
+				player.sendMessage(Text.of(TextColors.GOLD, "This shop is empty!"));
 				update();
 				return false;
 			}
+		} else {
+			return false;
 		}
-
+		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(getOwner()).get();
+		TransactionResult accountResult = buyerAccount.transfer(sellerAccount, CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		if (accountResult.getResult() != ResultType.SUCCESS) {
+			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+			return false;
+		}
 		Inventory inv = player.getInventory().query(InventoryRow.class);
-		Inventory invChest = ((TileEntityCarrier) chest.get()).getInventory();
+		
+		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = inv.query(item.peek().get().getItem()).poll(item.peek().get().getQuantity());
+				Optional<ItemStack> items = invToGive.query(item.peek().get().getItem()).poll(item.peek().get().getQuantity());
 				if (items.isPresent()) {
-					invChest.offer(items.get());
+					inv.offer(items.get()).getRejectedItems().forEach(action -> {
+						putItemInWorld(action, player.getLocation());
+					});
 				} else {
 					return false;
 				}
 			}
 		}
-		
-		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(getOwner()).get();
-		TransactionResult result = buyerAccount.transfer(sellerAccount, CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
-		if (result.getResult() != ResultType.SUCCESS) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "Seller don't have enough money!"));
-			return false;
-		}
-		
 		update();
 		return true;
 	}

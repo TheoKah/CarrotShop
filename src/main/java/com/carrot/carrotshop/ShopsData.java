@@ -1,4 +1,4 @@
-package yt.helloworld.carrotshop;
+package com.carrot.carrotshop;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,14 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import com.carrot.carrotshop.serializer.InventorySerializer;
+import com.carrot.carrotshop.shop.Buy;
+import com.carrot.carrotshop.shop.Sell;
+import com.carrot.carrotshop.shop.Shop;
+import com.carrot.carrotshop.shop.Trade;
+import com.carrot.carrotshop.shop.iBuy;
+import com.carrot.carrotshop.shop.iSell;
+import com.carrot.carrotshop.shop.iTrade;
 import com.google.common.reflect.TypeToken;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -26,14 +34,6 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
-import yt.helloworld.carrotshop.serializer.InventorySerializer;
-import yt.helloworld.carrotshop.shop.Buy;
-import yt.helloworld.carrotshop.shop.Sell;
-import yt.helloworld.carrotshop.shop.Shop;
-import yt.helloworld.carrotshop.shop.Trade;
-import yt.helloworld.carrotshop.shop.iBuy;
-import yt.helloworld.carrotshop.shop.iSell;
-import yt.helloworld.carrotshop.shop.iTrade;
 
 
 public class ShopsData {

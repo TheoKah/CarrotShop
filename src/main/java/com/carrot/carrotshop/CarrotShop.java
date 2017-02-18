@@ -1,4 +1,4 @@
-package yt.helloworld.carrotshop;
+package com.carrot.carrotshop;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +14,9 @@ import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.economy.EconomyService;
 
+import com.carrot.carrotshop.listener.BlockBreakListener;
+import com.carrot.carrotshop.listener.PlayerClickListener;
 import com.google.inject.Inject;
-
-import yt.helloworld.carrotshop.listener.BlockBreakListener;
-import yt.helloworld.carrotshop.listener.PlayerClickListener;
 
 @Plugin(id = "carrotshop", name = "CarrotShop", version = "1.2", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
 public class CarrotShop {

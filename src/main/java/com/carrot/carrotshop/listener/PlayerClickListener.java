@@ -1,4 +1,4 @@
-package yt.helloworld.carrotshop.listener;
+package com.carrot.carrotshop.listener;
 
 import java.util.Optional;
 
@@ -16,9 +16,9 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import yt.helloworld.carrotshop.CarrotShop;
-import yt.helloworld.carrotshop.ShopsData;
-import yt.helloworld.carrotshop.shop.Shop;
+import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopsData;
+import com.carrot.carrotshop.shop.Shop;
 
 
 public class PlayerClickListener {
