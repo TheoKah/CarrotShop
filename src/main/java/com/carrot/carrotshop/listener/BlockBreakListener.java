@@ -6,7 +6,9 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -33,6 +35,15 @@ public class BlockBreakListener {
 					}
 				}
 			}
+		}
+	}
+	
+	@Listener(order = Order.FIRST, beforeModifications = true)
+	public void onSignChanged(ChangeSignEvent event)
+	{
+		Optional<Shop> shop = ShopsData.getShop(event.getTargetTile().getLocation());
+		if (shop.isPresent()) {
+			event.setCancelled(true);
 		}
 	}
 }
