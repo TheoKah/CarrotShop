@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
@@ -18,6 +19,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -136,13 +138,10 @@ public abstract class Shop {
 		return -1;
 	}
 
-	static public boolean hasEnough(Inventory player, Inventory needs) {
+	static public boolean hasEnough(Inventory inventory, Inventory needs) {
 		for (Inventory item : needs.slots()) {
-			if (item.peek().isPresent()) {
-				ItemType type = item.peek().get().getItem();
-				if (player.query(type).totalItems() < needs.query(type).totalItems())
-					return false;
-			}
+			if (item.peek().isPresent() && inventory.query(item.peek().get()).totalItems() < item.totalItems())
+				return false;
 		}
 		return true;
 	}
@@ -189,7 +188,7 @@ public abstract class Shop {
 					player.sendMessage(Text.of(TextColors.DARK_RED, e.getMessage()));
 					return false;
 				}
-				
+
 				for (Location<World> loc : shop.getLocations()) {
 					Optional<Shop> oldShop = ShopsData.getShop(loc);
 					if (oldShop.isPresent()) {

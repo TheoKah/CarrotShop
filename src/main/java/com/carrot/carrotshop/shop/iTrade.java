@@ -89,7 +89,7 @@ public class iTrade extends Shop {
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
-				inv.query(item.peek().get().getItem()).poll(item.peek().get().getQuantity());
+				inv.query(item.peek().get()).poll(item.peek().get().getQuantity());
 			}
 		}
 		for (Inventory item : toGive.slots()) {

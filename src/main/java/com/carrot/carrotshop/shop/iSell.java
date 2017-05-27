@@ -87,7 +87,7 @@ public class iSell extends Shop {
 
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = inv.query(item.peek().get().getItem()).poll(item.peek().get().getQuantity());
+				Optional<ItemStack> items = inv.query(item.peek().get()).poll(item.peek().get().getQuantity());
 				if (!items.isPresent()) {
 					return false;
 				}
