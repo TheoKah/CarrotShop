@@ -2,10 +2,12 @@ package com.carrot.carrotshop.shop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.Entity;
@@ -15,6 +17,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -137,10 +140,38 @@ public abstract class Shop {
 
 	static public boolean hasEnough(Inventory inventory, Inventory needs) {
 		for (Inventory item : needs.slots()) {
-			if (item.peek().isPresent() && inventory.query(item.peek().get()).totalItems() < item.totalItems())
-				return false;
+			if (item.peek().isPresent()) {
+				Optional<ItemStack> template = getTemplate(inventory, item.peek().get());
+				if (!template.isPresent() || inventory.query(template.get()).totalItems() < item.totalItems())
+					return false;
+			}
 		}
 		return true;
+	}
+
+	static private boolean equalTo(ItemStack item, ItemStack needle) {
+		if (item.equalTo(needle))
+			return true;
+		for (Entry<DataQuery, Object> pair : needle.toContainer().getValues(true).entrySet()) {
+			if (pair.getKey().toString().equals("ItemType") || pair.getKey().toString().equals("UnsafeDamage") || pair.getKey().toString().equals("UnsafeData.StoredEnchantments")) {
+				Optional<Object> other = item.toContainer().get(pair.getKey());
+				if (!other.isPresent() || !pair.getValue().toString().equals(other.get().toString())) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	static public Optional<ItemStack> getTemplate(Inventory inventory, ItemStack needle) {
+		for (Inventory item : inventory.slots()) {
+			if (item.peek().isPresent()) {
+				if (equalTo(item.peek().get(), needle))
+					return item.peek();
+			}
+		}
+		return Optional.empty();
 	}
 
 	static public boolean build(Player player, Location<World> target) {

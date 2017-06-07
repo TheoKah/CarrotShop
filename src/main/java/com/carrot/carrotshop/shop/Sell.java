@@ -71,7 +71,7 @@ public class Sell extends Shop {
 		locations.add(sellerChest);
 		return locations;
 	}
-	
+
 	@Override
 	public boolean update() {
 		Optional<TileEntity> chest = sellerChest.getTileEntity();
@@ -122,15 +122,18 @@ public class Sell extends Shop {
 
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = inv.query(item.peek().get()).poll(item.peek().get().getQuantity());
-				if (items.isPresent()) {
-					invChest.offer(items.get());
-				} else {
-					return false;
+				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
+				if (template.isPresent()) {
+					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
+					if (items.isPresent()) {
+						invChest.offer(items.get());
+					} else {
+						return false;
+					}
 				}
 			}
 		}
-		
+
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(getOwner()).get();
 		TransactionResult result = buyerAccount.transfer(sellerAccount, CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
@@ -138,7 +141,7 @@ public class Sell extends Shop {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Seller don't have enough money!"));
 			return false;
 		}
-		
+
 		update();
 		return true;
 	}

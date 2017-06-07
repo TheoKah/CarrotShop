@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
-version = '1.4'
+version = '1.5'
 jar {
     manifest {
         attributes 'Implementation-Title': 'CarrotShop',
@@ -20,5 +20,5 @@ repositories {
 }
 
 dependencies {
-	compile 'org.spongepowered:spongeapi:5.0.0'
+	compile 'org.spongepowered:spongeapi:5.1.0'
 }

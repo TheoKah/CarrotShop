@@ -57,7 +57,7 @@ public class iSell extends Shop {
 			if (item.peek().isPresent())
 				itemsTemplate.offer(item.peek().get());
 		}
-		
+
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iSell shop:"));
 		info(player);
@@ -75,25 +75,28 @@ public class iSell extends Shop {
 		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
 		player.sendMessage(builder.build());
 	}
-	
+
 	@Override
 	public boolean trigger(Player player) {
 		if (!hasEnough(player.getInventory(), itemsTemplate)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have the items to sell!"));
 			return false;
 		}
-		
+
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = inv.query(item.peek().get()).poll(item.peek().get().getQuantity());
-				if (!items.isPresent()) {
-					return false;
+				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
+				if (template.isPresent()) {
+					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
+					if (!items.isPresent()) {
+						return false;
+					}
 				}
 			}
 		}
-		
+
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 		TransactionResult result = sellerAccount.deposit(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 		if (result.getResult() != ResultType.SUCCESS) {

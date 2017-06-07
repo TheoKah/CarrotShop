@@ -66,7 +66,7 @@ public class Trade extends Shop {
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a Trade shop:"));
 		info(player);
 	}
-	
+
 	@Override
 	public List<Location<World>> getLocations() {
 		List<Location<World>> locations = super.getLocations();
@@ -98,7 +98,7 @@ public class Trade extends Shop {
 			setFail();
 			return false;
 		}
-		
+
 		setOK();
 		return true;
 	}
@@ -149,7 +149,7 @@ public class Trade extends Shop {
 				return false;
 			}
 		}
-		
+
 		if (!hasEnough(player.getInventory(), toTake)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You are missing items for the trade!"));
 			return false;
@@ -159,23 +159,29 @@ public class Trade extends Shop {
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = inv.query(item.peek().get()).poll(item.peek().get().getQuantity());
-				if (items.isPresent()) {
-					invToTake.offer(items.get());
-				} else {
-					return false;
+				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
+				if (template.isPresent()) {
+					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
+					if (items.isPresent()) {
+						invToTake.offer(items.get());
+					} else {
+						return false;
+					}
 				}
 			}
 		}
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = invToGive.query(item.peek().get()).poll(item.peek().get().getQuantity());
-				if (items.isPresent()) {
-					inv.offer(items.get()).getRejectedItems().forEach(action -> {
-						putItemInWorld(action, player.getLocation());
-					});
-				} else {
-					return false;
+				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
+				if (template.isPresent()) {
+					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
+					if (items.isPresent()) {
+						inv.offer(items.get()).getRejectedItems().forEach(action -> {
+							putItemInWorld(action, player.getLocation());
+						});
+					} else {
+						return false;
+					}
 				}
 			}
 		}

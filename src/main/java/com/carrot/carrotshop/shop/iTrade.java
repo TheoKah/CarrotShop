@@ -7,6 +7,7 @@ import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
@@ -26,10 +27,10 @@ public class iTrade extends Shop {
 	private Inventory toGive;
 	@Setting
 	private Inventory toTake;
-	
+
 	public iTrade() {
 	}
-	
+
 	public iTrade(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		if (!player.hasPermission("carrotshop.admin"))
@@ -59,7 +60,7 @@ public class iTrade extends Shop {
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iTrade shop:"));
 		info(player);
 	}
-	
+
 	@Override
 	public void info(Player player) {
 		Builder builder = Text.builder();
@@ -78,7 +79,7 @@ public class iTrade extends Shop {
 		builder.append(Text.of("?"));
 		player.sendMessage(builder.build());
 		update();
-		
+
 	}
 	@Override
 	public boolean trigger(Player player) {
@@ -89,7 +90,10 @@ public class iTrade extends Shop {
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
-				inv.query(item.peek().get()).poll(item.peek().get().getQuantity());
+				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
+				if (template.isPresent()) {
+					inv.query(template.get()).poll(item.peek().get().getQuantity());
+				}
 			}
 		}
 		for (Inventory item : toGive.slots()) {

@@ -71,7 +71,7 @@ public class Buy extends Shop {
 		locations.add(sellerChest);
 		return locations;
 	}
-	
+
 	@Override
 	public boolean update() {
 		Optional<TileEntity> chest = sellerChest.getTileEntity();
@@ -120,18 +120,21 @@ public class Buy extends Shop {
 			return false;
 		}
 		Inventory inv = player.getInventory().query(InventoryRow.class);
-		
+
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				Optional<ItemStack> items = invToGive.query(item.peek().get()).poll(item.peek().get().getQuantity());
-				if (items.isPresent()) {
-					inv.offer(items.get()).getRejectedItems().forEach(action -> {
-						putItemInWorld(action, player.getLocation());
-					});
-				} else {
-					return false;
+				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
+				if (template.isPresent()) {
+					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
+					if (items.isPresent()) {
+						inv.offer(items.get()).getRejectedItems().forEach(action -> {
+							putItemInWorld(action, player.getLocation());
+						});
+					} else {
+						return false;
+					}
 				}
 			}
 		}
