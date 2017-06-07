@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
@@ -123,10 +124,13 @@ public class Buy extends Shop {
 
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
+		Builder itemsName = Text.builder();
+		
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
 				if (template.isPresent()) {
+					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						inv.offer(items.get()).getRejectedItems().forEach(action -> {
@@ -138,6 +142,16 @@ public class Buy extends Shop {
 				}
 			}
 		}
+		
+		Text report = Text.of(" bought", itemsName.build(), " for ", price);
+		
+		player.sendMessage(Text.of("You", report));
+
+		Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
+		if (seller.isPresent()) {
+			seller.get().sendMessage(Text.of(player.getName(), report));
+		}
+		
 		update();
 		return true;
 	}

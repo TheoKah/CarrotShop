@@ -85,13 +85,18 @@ public class iBuy extends Shop {
 		}
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 
+		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
+				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
 				inv.offer(item.peek().get().copy()).getRejectedItems().forEach(action -> {
 					putItemInWorld(action, player.getLocation());
 				});
 			}
 		}
+
+		player.sendMessage(Text.of("You bought", itemsName.build(), " for ", price));
+
 		return true;
 	}
 

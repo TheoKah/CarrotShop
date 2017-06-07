@@ -85,10 +85,12 @@ public class iSell extends Shop {
 
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 
+		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
+					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
 					if (!items.isPresent()) {
 						return false;
@@ -103,7 +105,9 @@ public class iSell extends Shop {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Unable to give you the money!"));
 			return false;
 		}
-
+		
+		player.sendMessage(Text.of("You sold", itemsName.build(), " for ", price));
+		
 		return true;
 	}
 

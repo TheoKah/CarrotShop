@@ -88,21 +88,29 @@ public class iTrade extends Shop {
 			return false;
 		}
 		Inventory inv = player.getInventory().query(InventoryRow.class);
+		
+		Builder itemsName = Text.builder();
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
+					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					inv.query(template.get()).poll(item.peek().get().getQuantity());
 				}
 			}
 		}
+		itemsName.append(Text.of(" for"));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
+				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
 				inv.offer(item.peek().get().copy()).getRejectedItems().forEach(action -> {
 					putItemInWorld(action, player.getLocation());
 				});
 			}
 		}
+				
+		player.sendMessage(Text.of("You traded", itemsName.build()));
+
 		return true;
 	}
 
