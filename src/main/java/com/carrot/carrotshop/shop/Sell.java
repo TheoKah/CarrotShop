@@ -24,6 +24,7 @@ import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
 import com.carrot.carrotshop.ShopsData;
+import com.carrot.carrotshop.ShopsLogs;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -42,6 +43,8 @@ public class Sell extends Shop {
 
 	public Sell(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
+		if (!player.hasPermission("carrotshop.create.sell"))
+			throw new ExceptionInInitializerError("You don't have perms to build a Sell sign");
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.isEmpty())
 			throw new ExceptionInInitializerError("Sell signs require a chest");
@@ -145,6 +148,8 @@ public class Sell extends Shop {
 			return false;
 		}
 
+		ShopsLogs.log(getOwner(), player, "sell", super.getLocations().get(0), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
+		
 		Text report = Text.of(" sold", itemsName.build(), " for ", price);
 		
 		player.sendMessage(Text.of("You", report));

@@ -87,7 +87,7 @@ public abstract class Shop {
 			if (owner.equals(player.getUniqueId()))
 				return true;
 		}
-		return player.hasPermission("carrotshop.admin");
+		return player.hasPermission("carrotshop.admin.override");
 	}
 
 	protected final void setOK() {
@@ -153,7 +153,10 @@ public abstract class Shop {
 		if (item.equalTo(needle))
 			return true;
 		for (Entry<DataQuery, Object> pair : needle.toContainer().getValues(true).entrySet()) {
-			if (pair.getKey().toString().equals("ItemType") || pair.getKey().toString().equals("UnsafeDamage") || pair.getKey().toString().equals("UnsafeData.StoredEnchantments")) {
+			if (pair.getKey().toString().equals("ItemType")
+					|| pair.getKey().toString().equals("UnsafeDamage")
+					|| pair.getKey().toString().equals("UnsafeData.StoredEnchantments")
+					|| pair.getKey().toString().equals("UnsafeData.Potion")) {
 				Optional<Object> other = item.toContainer().get(pair.getKey());
 				if (!other.isPresent() || !pair.getValue().toString().equals(other.get().toString())) {
 					return false;
@@ -221,7 +224,7 @@ public abstract class Shop {
 					Optional<Shop> oldShop = ShopsData.getShop(loc);
 					if (oldShop.isPresent()) {
 						if (!oldShop.get().destroy(player)) {
-							player.sendMessage(Text.of(TextColors.DARK_RED, "This shop would override a shop you do now own. Abort."));
+							player.sendMessage(Text.of(TextColors.DARK_RED, "This shop would override a shop you do not own. Abort."));
 							for (Location<World> loc2 : shop.getLocations()) {
 								Optional<Shop> oldShop2 = ShopsData.getShop(loc2);
 								if (oldShop.isPresent())

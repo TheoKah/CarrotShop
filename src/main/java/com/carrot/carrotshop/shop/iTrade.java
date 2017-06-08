@@ -33,7 +33,7 @@ public class iTrade extends Shop {
 
 	public iTrade(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
-		if (!player.hasPermission("carrotshop.admin"))
+		if (!player.hasPermission("carrotshop.admin.itrade"))
 			throw new ExceptionInInitializerError("You don't have perms to build an iTrade sign");
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.size() < 2)
@@ -108,7 +108,7 @@ public class iTrade extends Shop {
 				});
 			}
 		}
-				
+		
 		player.sendMessage(Text.of("You traded", itemsName.build()));
 
 		return true;

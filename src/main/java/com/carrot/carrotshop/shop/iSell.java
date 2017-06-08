@@ -38,7 +38,7 @@ public class iSell extends Shop {
 
 	public iSell(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
-		if (!player.hasPermission("carrotshop.admin"))
+		if (!player.hasPermission("carrotshop.admin.isell"))
 			throw new ExceptionInInitializerError("You don't have perms to build an iTrade sign");
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.isEmpty())

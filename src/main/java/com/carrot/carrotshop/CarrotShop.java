@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -13,12 +15,15 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.economy.EconomyService;
+import org.spongepowered.api.text.Text;
 
+import com.carrot.carrotshop.command.ShopReportExecutor;
+import com.carrot.carrotshop.command.element.PlayerCmdElement;
 import com.carrot.carrotshop.listener.BlockBreakListener;
 import com.carrot.carrotshop.listener.PlayerClickListener;
 import com.google.inject.Inject;
 
-@Plugin(id = "carrotshop", name = "CarrotShop", version = "1.5", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
+@Plugin(id = "carrotshop", name = "CarrotShop", version = "1.6", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
 public class CarrotShop {
 	private File rootDir;
 
@@ -39,7 +44,8 @@ public class CarrotShop {
 		plugin = this;
 
 		rootDir = new File(defaultConfigDir, "carrotshop");
-		
+
+		ShopsLogs.init(rootDir);
 		ShopsData.init(rootDir);
 	}
 
@@ -51,7 +57,15 @@ public class CarrotShop {
 		Sponge.getServiceManager()
 		.getRegistration(EconomyService.class)
 		.ifPresent(prov -> economyService = prov.getProvider());
+		
+		CommandSpec shopReport = CommandSpec.builder()
+			    .description(Text.of("Generare a CarrotShop report"))
+			    .executor(new ShopReportExecutor())
+			    .arguments(GenericArguments.optional(new PlayerCmdElement(Text.of("player"))))
+			    .build();
 
+			Sponge.getCommandManager().register(plugin, shopReport, "carrotshopreport", "shopreport", "carrotreport", "cr", "sr", "creport", "sreport");
+		
 		Sponge.getEventManager().registerListeners(this, new PlayerClickListener());
 		Sponge.getEventManager().registerListeners(this, new BlockBreakListener());
 	}
