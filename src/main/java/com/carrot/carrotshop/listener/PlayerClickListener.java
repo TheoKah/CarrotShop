@@ -52,7 +52,7 @@ public class PlayerClickListener {
 
 		Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (optItem.isPresent() && optItem.get().getItem().equals(ItemTypes.REDSTONE)) {
-			if (optLoc.get().getBlockType() == BlockTypes.CHEST) {
+			if (optLoc.get().getBlockType() == BlockTypes.CHEST || optLoc.get().getBlockType() == BlockTypes.TRAPPED_CHEST) {
 				event.setCancelled(true);
 				ShopsData.storeItemLocation(player, optLoc.get());
 			} else if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {
