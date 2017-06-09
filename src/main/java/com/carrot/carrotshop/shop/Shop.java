@@ -155,8 +155,10 @@ public abstract class Shop {
 		for (Entry<DataQuery, Object> pair : needle.toContainer().getValues(true).entrySet()) {
 			if (pair.getKey().toString().equals("ItemType")
 					|| pair.getKey().toString().equals("UnsafeDamage")
+					|| pair.getKey().toString().equals("UnsafeData.ench")
 					|| pair.getKey().toString().equals("UnsafeData.StoredEnchantments")
-					|| pair.getKey().toString().equals("UnsafeData.Potion")) {
+					|| pair.getKey().toString().equals("UnsafeData.Potion")
+					|| pair.getKey().toString().equals("UnsafeData.EntityTag")) {
 				Optional<Object> other = item.toContainer().get(pair.getKey());
 				if (!other.isPresent() || !pair.getValue().toString().equals(other.get().toString())) {
 					return false;
