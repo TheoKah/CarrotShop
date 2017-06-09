@@ -9,10 +9,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -85,7 +88,19 @@ public class ShopsLogs {
 		locationNode.addProperty("X", location.getBlockX());
 		locationNode.addProperty("Y", location.getBlockY());
 		locationNode.addProperty("Z", location.getBlockZ());
-		newNode.add("location", locationNode);
+		
+		Optional<TileEntity> sign = location.getTileEntity();
+		if (sign.isPresent() && sign.get().supports(SignData.class)) {
+			Optional<SignData> data = sign.get().getOrCreate(SignData.class);
+			if (data.isPresent()) {
+				locationNode.addProperty("line0", data.get().lines().get(0).toPlain());
+				locationNode.addProperty("line1", data.get().lines().get(1).toPlain());
+				locationNode.addProperty("line2", data.get().lines().get(2).toPlain());
+				locationNode.addProperty("line3", data.get().lines().get(3).toPlain());
+			}
+		}
+		
+		newNode.add("sign", locationNode);
 
 
 		if (price.isPresent())
