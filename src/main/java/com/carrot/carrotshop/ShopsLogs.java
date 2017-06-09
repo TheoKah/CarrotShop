@@ -55,11 +55,11 @@ public class ShopsLogs {
 		data.append(",\"motd\":\"" + TextSerializers.FORMATTING_CODE.serialize(Sponge.getServer().getMotd()) + "\"");
 		
 		if (CarrotShop.getEcoService() != null) {
-			data.append(",\"currencyID\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getId() + "\"");
-			data.append(",\"currencySymbol\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getSymbol().toPlain() + "\"");
+			data.append(",\"currencySymbol\":\"" + TextSerializers.FORMATTING_CODE.serialize(CarrotShop.getEcoService().getDefaultCurrency().getSymbol()) + "\"");
+			data.append(",\"currencySymbolplain\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getSymbol().toPlain() + "\"");
 			data.append(",\"currencyName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getName() + "\"");
-			data.append(",\"currencyDName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getDisplayName().toPlain() + "\"");
-			data.append(",\"currencyPDName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName().toPlain() + "\"");
+			data.append(",\"currencyDName\":\"" + TextSerializers.FORMATTING_CODE.serialize(CarrotShop.getEcoService().getDefaultCurrency().getDisplayName()) + "\"");
+			data.append(",\"currencyPDName\":\"" + TextSerializers.FORMATTING_CODE.serialize(CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()) + "\"");
 		}
 				
 		data.append("},\"logs\":[");
