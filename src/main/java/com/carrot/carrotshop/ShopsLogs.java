@@ -15,7 +15,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.service.user.UserStorageService;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -34,8 +33,10 @@ public class ShopsLogs {
 	}
 
 	public static Optional<String> getLog(UUID shopOwner) {
-		File file = getFile(shopOwner);
-		if (!file.exists())
+		File fileBuy = new File(carrotLogsFolder, shopOwner.toString() + ".buy");
+		File fileSell = new File(carrotLogsFolder, shopOwner.toString() + ".sell");
+		File fileTrade = new File(carrotLogsFolder, shopOwner.toString() + ".trade");
+		if (!fileBuy.exists() && !fileSell.exists() && !fileTrade.exists())
 			return Optional.empty();
 
 		StringBuilder data = new StringBuilder();
@@ -53,7 +54,7 @@ public class ShopsLogs {
 		data.append(",\"playerID\":\"" + player.get().getUniqueId().toString() + "\"");
 		data.append(",\"motdplain\":\"" + Sponge.getServer().getMotd().toPlain() + "\"");
 		data.append(",\"motd\":\"" + TextSerializers.FORMATTING_CODE.serialize(Sponge.getServer().getMotd()) + "\"");
-		
+
 		if (CarrotShop.getEcoService() != null) {
 			data.append(",\"currencySymbol\":\"" + TextSerializers.FORMATTING_CODE.serialize(CarrotShop.getEcoService().getDefaultCurrency().getSymbol()) + "\"");
 			data.append(",\"currencySymbolplain\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getSymbol().toPlain() + "\"");
@@ -61,16 +62,42 @@ public class ShopsLogs {
 			data.append(",\"currencyDName\":\"" + TextSerializers.FORMATTING_CODE.serialize(CarrotShop.getEcoService().getDefaultCurrency().getDisplayName()) + "\"");
 			data.append(",\"currencyPDName\":\"" + TextSerializers.FORMATTING_CODE.serialize(CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()) + "\"");
 		}
-				
-		data.append("},\"logs\":[");
 
-		try {
-			data.append(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			return Optional.empty();
+		data.append("},\"logs\":{");
+
+
+
+		data.append("\"buy\":[");
+		if (fileBuy.exists()) {
+			try {
+				data.append(new String(Files.readAllBytes(fileBuy.toPath()), StandardCharsets.UTF_8));
+			} catch (IOException e) {
+				return Optional.empty();
+			}
 		}
+		data.append("],");
 
-		data.append("]}");
+
+		data.append("\"sell\":[");
+		if (fileSell.exists()) {
+			try {
+				data.append(new String(Files.readAllBytes(fileSell.toPath()), StandardCharsets.UTF_8));
+			} catch (IOException e) {
+				return Optional.empty();
+			}
+		}
+		data.append("],");
+
+
+		data.append("\"trade\":[");
+		if (fileTrade.exists()) {
+			try {
+				data.append(new String(Files.readAllBytes(fileTrade.toPath()), StandardCharsets.UTF_8));
+			} catch (IOException e) {
+				return Optional.empty();
+			}
+		}
+		data.append("]}}");
 		return Optional.of(data.toString());
 	}
 
@@ -79,7 +106,6 @@ public class ShopsLogs {
 		JsonObject newNode = new JsonObject();
 		newNode.addProperty("player", player.getName());
 		newNode.addProperty("playerID", player.getUniqueId().toString());
-		newNode.addProperty("type", type);
 		newNode.addProperty("time", System.currentTimeMillis());
 
 		JsonObject locationNode = new JsonObject();
@@ -88,7 +114,7 @@ public class ShopsLogs {
 		locationNode.addProperty("X", location.getBlockX());
 		locationNode.addProperty("Y", location.getBlockY());
 		locationNode.addProperty("Z", location.getBlockZ());
-		
+
 		Optional<TileEntity> sign = location.getTileEntity();
 		if (sign.isPresent() && sign.get().supports(SignData.class)) {
 			Optional<SignData> data = sign.get().getOrCreate(SignData.class);
@@ -99,7 +125,7 @@ public class ShopsLogs {
 				locationNode.addProperty("line3", data.get().lines().get(3).toPlain());
 			}
 		}
-		
+
 		newNode.add("sign", locationNode);
 
 
@@ -111,16 +137,16 @@ public class ShopsLogs {
 
 		if (itemsB.isPresent())
 			newNode.add("items2", invToArray(itemsB.get()));
-		
+
 		try {
-			File file = new File(carrotLogsFolder, shopOwner.toString() + ".shoplog");
-			
+			File file = new File(carrotLogsFolder, shopOwner.toString() + "." + type);
+
 			if (!file.exists()) {
 				file.createNewFile();
 				JsonObject firstNode = new JsonObject();
-				firstNode.addProperty("type", "init");
+				firstNode.addProperty("init", true);
 				firstNode.addProperty("time", System.currentTimeMillis());
-				
+
 				Files.write(file.toPath(), firstNode.toString().getBytes(), StandardOpenOption.APPEND);
 			}
 			Files.write(file.toPath(), ",".getBytes(), StandardOpenOption.APPEND);
@@ -129,10 +155,6 @@ public class ShopsLogs {
 		} catch (IOException e) {
 			CarrotShop.getLogger().error("Unable to store logs for shop " + shopOwner + " triggered by " + player.getName() + ": " + e.getMessage());
 		}
-	}
-
-	private static File getFile(UUID shopOwner) {
-		return new File(carrotLogsFolder, shopOwner.toString() + ".shoplog");
 	}
 
 	private static JsonArray invToArray(Inventory inv) {

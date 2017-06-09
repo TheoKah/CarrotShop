@@ -72,15 +72,15 @@ public class ShopReportExecutor implements CommandExecutor{
 		}
 
 		src.sendMessage(Text.of(TextColors.GOLD, "The report is being prepared..."));
-
-		Optional<String> query = ShopsLogs.getLog(target);
-		
-		if (!query.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "No data found to generate report"));
-			return CommandResult.success();
-		}
 		
 		Task.builder().execute(() -> {
+			Optional<String> query = ShopsLogs.getLog(target);
+			
+			if (!query.isPresent()) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "No data found to generate report"));
+				return;
+			}
+			
 			String url = "https://carrotshop-ffb97.firebaseio.com/shop.json";
 			String charset = java.nio.charset.StandardCharsets.UTF_8.name();
 
