@@ -161,7 +161,7 @@ public class Trade extends Shop {
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 		Inventory invToTake = ((TileEntityCarrier) chestToTake.get()).getInventory();
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
-		
+
 		Builder itemsName = Text.builder();
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
@@ -177,9 +177,9 @@ public class Trade extends Shop {
 				}
 			}
 		}
-		
+
 		itemsName.append(Text.of(" for"));
-		
+
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
@@ -196,18 +196,20 @@ public class Trade extends Shop {
 				}
 			}
 		}
-		
+
 		ShopsLogs.log(getOwner(), player, "trade", super.getLocations().get(0), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
-		
+
 		Text report = Text.of(" traded", itemsName.build());
-		
+
 		player.sendMessage(Text.of("You", report));
 
-		Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
-		if (seller.isPresent()) {
-			seller.get().sendMessage(Text.of(player.getName(), report));
+		if (!CarrotShop.noSpam(getOwner())) {
+			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
+			if (seller.isPresent()) {
+				seller.get().sendMessage(Text.of(player.getName(), report));
+			}
 		}
-		
+
 		update();
 		return true;
 	}

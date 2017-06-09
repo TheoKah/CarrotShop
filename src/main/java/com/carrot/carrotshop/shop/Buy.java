@@ -128,7 +128,7 @@ public class Buy extends Shop {
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
 		Builder itemsName = Text.builder();
-		
+
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
@@ -145,18 +145,20 @@ public class Buy extends Shop {
 				}
 			}
 		}
-		
+
 		ShopsLogs.log(getOwner(), player, "buy", super.getLocations().get(0), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
-		
+
 		Text report = Text.of(" bought", itemsName.build(), " for ", price);
-		
+
 		player.sendMessage(Text.of("You", report));
 
-		Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
-		if (seller.isPresent()) {
-			seller.get().sendMessage(Text.of(player.getName(), report));
+		if (!CarrotShop.noSpam(getOwner())) {
+			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
+			if (seller.isPresent()) {
+				seller.get().sendMessage(Text.of(player.getName(), report));
+			}
 		}
-		
+
 		update();
 		return true;
 	}
