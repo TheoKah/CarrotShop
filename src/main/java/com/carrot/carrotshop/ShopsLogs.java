@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -37,7 +38,8 @@ public class ShopsLogs {
 		StringBuilder data = new StringBuilder();
 		data.append("{\"info\":{");
 
-		data.append("\"time\":{\".sv\":\"timestamp\"}");
+		data.append("\"dbtime\":{\".sv\":\"timestamp\"}");
+		data.append(",\"time\":" + System.currentTimeMillis());
 
 		Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
 
@@ -46,16 +48,17 @@ public class ShopsLogs {
 			return Optional.empty();
 		data.append(",\"player\":\"" + player.get().getName() + "\"");
 		data.append(",\"playerID\":\"" + player.get().getUniqueId().toString() + "\"");
-
+		data.append(",\"motdplain\":\"" + Sponge.getServer().getMotd().toPlain() + "\"");
+		data.append(",\"motd\":\"" + TextSerializers.FORMATTING_CODE.serialize(Sponge.getServer().getMotd()) + "\"");
+		
 		if (CarrotShop.getEcoService() != null) {
 			data.append(",\"currencyID\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getId() + "\"");
 			data.append(",\"currencySymbol\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getSymbol().toPlain() + "\"");
 			data.append(",\"currencyName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getName() + "\"");
-			data.append(",\"currencyDName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getDisplayName() + "\"");
-			data.append(",\"currencyPDName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName() + "\"");
+			data.append(",\"currencyDName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getDisplayName().toPlain() + "\"");
+			data.append(",\"currencyPDName\":\"" + CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName().toPlain() + "\"");
 		}
-		
-		
+				
 		data.append("},\"logs\":[");
 
 		try {

@@ -18,6 +18,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -72,10 +73,6 @@ public class ShopReportExecutor implements CommandExecutor{
 
 		src.sendMessage(Text.of(TextColors.GOLD, "The report is being prepared..."));
 
-
-		String url = "https://carrotshop-ffb97.firebaseio.com/shop.json";
-		String charset = java.nio.charset.StandardCharsets.UTF_8.name();
-
 		Optional<String> query = ShopsLogs.getLog(target);
 		
 		if (!query.isPresent()) {
@@ -83,50 +80,53 @@ public class ShopReportExecutor implements CommandExecutor{
 			return CommandResult.success();
 		}
 		
-		CarrotShop.getLogger().info("query: " + query.get());
+		Task.builder().execute(() -> {
+			String url = "https://carrotshop-ffb97.firebaseio.com/shop.json";
+			String charset = java.nio.charset.StandardCharsets.UTF_8.name();
 
-		HttpURLConnection connection = null;
-		try {
-			connection = (HttpURLConnection) new URL(url).openConnection();
+			HttpURLConnection connection = null;
+			try {
+				connection = (HttpURLConnection) new URL(url).openConnection();
 
-			connection.setDoOutput(true);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Accept-Charset", charset);
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
+				connection.setDoOutput(true);
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Accept-Charset", charset);
+				connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
 
 
-			OutputStream output = connection.getOutputStream();	
-			output.write(query.get().getBytes(charset));
+				OutputStream output = connection.getOutputStream();	
+				output.write(query.get().getBytes(charset));
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line+"\n");
-            }
-            br.close();
-            CarrotShop.getLogger().info("answer: " + sb.toString());
-            
-            JsonElement jelement = new JsonParser().parse(sb.toString());
-            JsonObject  jobject = jelement.getAsJsonObject();
-            
+				BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	            StringBuilder sb = new StringBuilder();
+	            String line;
+	            while ((line = br.readLine()) != null) {
+	                sb.append(line+"\n");
+	            }
+	            br.close();
+	            
+	            JsonElement jelement = new JsonParser().parse(sb.toString());
+	            JsonObject  jobject = jelement.getAsJsonObject();
+	            
+				
+				String reportURL = "http://carrotshop.xyz/" + jobject.get("name").getAsString() + ".htm";
+
+				src.sendMessage(Text.of(TextColors.GOLD, "Report is ready: ", Text.builder(reportURL)
+						.color(TextColors.DARK_AQUA)
+						.onClick(TextActions.openUrl(new URL(reportURL))).build()));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				CarrotShop.getLogger().error("ERROR: " + e.getMessage());
+				if (connection != null)
+					try {
+						CarrotShop.getLogger().error(connection.getResponseMessage());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+			}
 			
-			String reportURL = "http://carrotshop.xyz/" + jobject.get("name").getAsString() + ".htm";
-
-			src.sendMessage(Text.of(TextColors.GOLD, "Report is ready: ", Text.builder(reportURL)
-					.color(TextColors.DARK_AQUA)
-					.onClick(TextActions.openUrl(new URL(reportURL))).build()));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			CarrotShop.getLogger().error("ERROR: " + e.getMessage());
-			if (connection != null)
-				try {
-					CarrotShop.getLogger().error(connection.getResponseMessage());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-		}
+		}).async().name("CarrotShop - Report").submit(CarrotShop.getInstance());
 
 		return CommandResult.success();
 	}
