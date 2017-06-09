@@ -95,7 +95,7 @@ public class Buy extends Shop {
 		builder.append(Text.of("Buy"));
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
 		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
@@ -133,7 +133,7 @@ public class Buy extends Shop {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						inv.offer(items.get()).getRejectedItems().forEach(action -> {

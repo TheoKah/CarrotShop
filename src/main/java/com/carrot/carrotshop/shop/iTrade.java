@@ -67,13 +67,13 @@ public class iTrade extends Shop {
 		builder.append(Text.of("Trade"));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
 		builder.append(Text.of(" and get"));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
 		builder.append(Text.of("?"));
@@ -94,7 +94,7 @@ public class iTrade extends Shop {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					inv.query(template.get()).poll(item.peek().get().getQuantity());
 				}
 			}
@@ -102,7 +102,7 @@ public class iTrade extends Shop {
 		itemsName.append(Text.of(" for"));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
-				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 				inv.offer(item.peek().get().copy()).getRejectedItems().forEach(action -> {
 					putItemInWorld(action, player.getLocation());
 				});

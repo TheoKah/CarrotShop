@@ -68,7 +68,7 @@ public class iBuy extends Shop {
 		builder.append(Text.of("Buy"));
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
 		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
@@ -88,7 +88,7 @@ public class iBuy extends Shop {
 		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
-				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getItem().getTranslation().get(), " x", item.peek().get().getQuantity()));
+				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 				inv.offer(item.peek().get().copy()).getRejectedItems().forEach(action -> {
 					putItemInWorld(action, player.getLocation());
 				});
