@@ -43,8 +43,26 @@ public class PlayerClickListener {
 		}
 	}
 
+	@Listener(order=Order.FIRST)
+	public void onPlayerLeftClickMaster(InteractBlockEvent.Primary.MainHand event, @First Player player)
+	{
+		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
+		if (!optLoc.isPresent())
+			return;
+
+		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
+		if (shop.isPresent()) {
+			shop.get().info(player);
+			if (player.gameMode().get().equals(GameModes.CREATIVE)) {
+				Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
+				if (!optItem.isPresent() || !optItem.get().getItem().equals(ItemTypes.BEDROCK))
+					event.setCancelled(true);
+			}
+		}		
+	}
+
 	@Listener
-	public void onPlayerLeftClick(InteractBlockEvent.Primary.MainHand event, @First Player player)
+	public void onPlayerLeftClickNormal(InteractBlockEvent.Primary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
 		if (!optLoc.isPresent())
@@ -58,13 +76,6 @@ public class PlayerClickListener {
 			} else if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {
 				event.setCancelled(true);
 				Shop.build(player, optLoc.get());
-			}
-		} else {
-			Optional<Shop> shop = ShopsData.getShop(optLoc.get());
-			if (shop.isPresent()) {
-				shop.get().info(player);
-				if (player.gameMode().get().equals(GameModes.CREATIVE) && (!optItem.isPresent() || !optItem.get().getItem().equals(ItemTypes.BEDROCK)))
-					event.setCancelled(true);
 			}
 		}
 	}
