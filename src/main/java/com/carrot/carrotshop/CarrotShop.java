@@ -21,13 +21,15 @@ import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 
 import com.carrot.carrotshop.command.NoSpamExecutor;
+import com.carrot.carrotshop.command.ShopMainExecutor;
 import com.carrot.carrotshop.command.ShopReportExecutor;
+import com.carrot.carrotshop.command.ShopWikiExecutor;
 import com.carrot.carrotshop.command.element.PlayerCmdElement;
 import com.carrot.carrotshop.listener.BlockBreakListener;
 import com.carrot.carrotshop.listener.PlayerClickListener;
 import com.google.inject.Inject;
 
-@Plugin(id = "carrotshop", name = "CarrotShop", version = "1.7", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
+@Plugin(id = "carrotshop", name = "CarrotShop", version = "1.8", authors={"Carrot"}, description = "A SignShop-like shop plugin for Sponge.", url="https://github.com/TheoKah/CarrotShop")
 public class CarrotShop {
 	private File rootDir;
 
@@ -69,15 +71,29 @@ public class CarrotShop {
 				.executor(new ShopReportExecutor())
 				.arguments(GenericArguments.optional(new PlayerCmdElement(Text.of("player"))))
 				.build();
-
-		Sponge.getCommandManager().register(plugin, shopReport, "carrotshopreport", "shopreport", "carrotreport", "cr", "sr", "creport", "sreport");
 		
 		CommandSpec shopSpam = CommandSpec.builder()
 				.description(Text.of("Toggle shop message when someone use your shop"))
 				.executor(new NoSpamExecutor())
 				.build();
+		
+		CommandSpec shopWiki = CommandSpec.builder()
+				.description(Text.of("Displays a link to the shop wiki"))
+				.executor(new ShopWikiExecutor())
+				.build();
+		
+		CommandSpec shopMain = CommandSpec.builder()
+				.description(Text.of("Main CarrotShop command"))
+				.executor(new ShopMainExecutor())
+				.child(shopWiki, "help", "?", "wiki", "how", "howto", "h")
+				.child(shopSpam, "hide", "shopchat", "stop", "off", "nospam", "spam", "toggle", "togglechat", "t")
+				.child(shopReport, "report", "shopreport", "r")
+				.build();
 
-		Sponge.getCommandManager().register(plugin, shopSpam, "hideshopchat", "shophide", "carrothide", "shide", "chide", "sh", "ch");
+		Sponge.getCommandManager().register(plugin, shopReport, "carrotshopreport", "shopreport", "carrotreport", "cr", "sr", "creport", "sreport");
+		Sponge.getCommandManager().register(plugin, shopSpam, "carrotshophide", "hideshopchat", "shophide", "carrothide", "shide", "chide", "sh", "ch");
+		Sponge.getCommandManager().register(plugin, shopWiki, "carrotshophelp", "carrotshopwiki", "shophelp", "shopwiki", "cshophelp", "cshopwiki", "carrothelp", "carrotwiki", "shelp", "swiki");
+		Sponge.getCommandManager().register(plugin, shopMain, "carrotshop", "cs", "shop", "s", "c");
 
 		Sponge.getEventManager().registerListeners(this, new PlayerClickListener());
 		Sponge.getEventManager().registerListeners(this, new BlockBreakListener());
