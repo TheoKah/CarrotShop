@@ -43,7 +43,7 @@ public class PlayerClickListener {
 		}
 	}
 
-	@Listener(order=Order.FIRST)
+	@Listener
 	public void onPlayerLeftClick(InteractBlockEvent.Primary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
