@@ -22,7 +22,7 @@ import com.carrot.carrotshop.shop.Shop;
 
 
 public class PlayerClickListener {
-	@Listener(order=Order.FIRST)
+	@Listener(order=Order.AFTER_PRE, beforeModifications = true)
 	public void onPlayerRightClick(InteractBlockEvent.Secondary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
@@ -32,7 +32,6 @@ public class PlayerClickListener {
 		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
 		if (shop.isPresent()) {
 			if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {
-				event.setCancelled(true);
 				shop.get().trigger(player);
 				Sponge.getScheduler().createTaskBuilder().delayTicks(4).execute(
 						task -> {
@@ -43,7 +42,7 @@ public class PlayerClickListener {
 		}
 	}
 
-	@Listener(order=Order.FIRST)
+	@Listener(order=Order.AFTER_PRE, beforeModifications = true)
 	public void onPlayerLeftClickMaster(InteractBlockEvent.Primary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
@@ -51,17 +50,29 @@ public class PlayerClickListener {
 			return;
 
 		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
-		if (shop.isPresent()) {
+		if (shop.isPresent())
 			shop.get().info(player);
-			if (player.gameMode().get().equals(GameModes.CREATIVE)) {
-				Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
-				if (!optItem.isPresent() || !optItem.get().getItem().equals(ItemTypes.BEDROCK))
-					event.setCancelled(true);
-			}
-		}		
 	}
 
-	@Listener
+	@Listener(order=Order.FIRST, beforeModifications = true)
+	public void onPlayerLeftClickProtect(InteractBlockEvent.Primary.MainHand event, @First Player player)
+	{
+		if (!player.gameMode().get().equals(GameModes.CREATIVE))
+			return;
+		
+		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
+		if (!optLoc.isPresent())
+			return;
+
+		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
+		if (shop.isPresent()) {
+			Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
+				if (!optItem.isPresent() || !optItem.get().getItem().equals(ItemTypes.BEDROCK))
+					event.setCancelled(true);
+		}
+	}
+
+	@Listener(beforeModifications = true)
 	public void onPlayerLeftClickNormal(InteractBlockEvent.Primary.MainHand event, @First Player player)
 	{
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
