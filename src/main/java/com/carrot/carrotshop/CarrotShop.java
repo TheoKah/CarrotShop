@@ -24,7 +24,6 @@ import com.carrot.carrotshop.command.NoSpamExecutor;
 import com.carrot.carrotshop.command.ShopMainExecutor;
 import com.carrot.carrotshop.command.ShopReportExecutor;
 import com.carrot.carrotshop.command.ShopWikiExecutor;
-import com.carrot.carrotshop.command.element.PlayerCmdElement;
 import com.carrot.carrotshop.listener.BlockBreakListener;
 import com.carrot.carrotshop.listener.PlayerClickListener;
 import com.google.inject.Inject;
@@ -69,7 +68,7 @@ public class CarrotShop {
 		CommandSpec shopReport = CommandSpec.builder()
 				.description(Text.of("Generare a CarrotShop report"))
 				.executor(new ShopReportExecutor())
-				.arguments(GenericArguments.optional(new PlayerCmdElement(Text.of("player"))))
+				.arguments(GenericArguments.optional(GenericArguments.user(Text.of("player"))))
 				.build();
 		
 		CommandSpec shopSpam = CommandSpec.builder()
