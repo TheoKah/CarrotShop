@@ -1,24 +1,11 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-
-targetCompatibility = "1.8"
-sourceCompatibility = "1.8"
-version = '1.9'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'CarrotShop',
-                   'Implementation-Version': version
-    }
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        name = 'sponge'
-        url = 'http://repo.spongepowered.org/maven'
-    }
-}
+group = 'com.carrot'
+version = '1.10'
+description = 'A SignShop-like shop plugin for Sponge'
 
 dependencies {
-	compile 'org.spongepowered:spongeapi:5.1.0'
+    compile 'org.spongepowered:spongeapi:5.1.0'
 }
