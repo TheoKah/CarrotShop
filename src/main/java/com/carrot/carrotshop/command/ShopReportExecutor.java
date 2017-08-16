@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -19,7 +18,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -34,30 +32,17 @@ public class ShopReportExecutor implements CommandExecutor{
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Optional<String> targetName = args.<String>getOne("player");
-
+		Optional<User> user = args.<User>getOne("player");
+		
 		UUID target;
 
-		if (targetName.isPresent()) {
+		if (user.isPresent()) {
 			if (!src.hasPermission("carrotshop.report.other")) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to generate reports for other players"));
 				return CommandResult.success();
 			}
 
-			Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(targetName.get());
-
-			if (onlinePlayer.isPresent()) {
-				target = onlinePlayer.get().getUniqueId();
-			} else {
-				Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
-
-				Optional<User> offlinePlayer = userStorage.get().get(targetName.get());
-				if (!offlinePlayer.isPresent()) {
-					src.sendMessage(Text.of(TextColors.DARK_RED, "Player unknown"));
-					return CommandResult.success();
-				}
-				target = offlinePlayer.get().getUniqueId();
-			}
+			target = user.get().getUniqueId();
 
 		} else {
 			if(!(src instanceof Player)) {
