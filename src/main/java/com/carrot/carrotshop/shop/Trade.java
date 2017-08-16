@@ -153,12 +153,14 @@ public class Trade extends Shop {
 				return false;
 			}
 		}
+		
+		Inventory inv = player.getInventory().query(InventoryRow.class);
 
-		if (!hasEnough(player.getInventory(), toTake)) {
+		if (!hasEnough(inv, toTake)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You are missing items for the trade!"));
 			return false;
 		}
-		Inventory inv = player.getInventory().query(InventoryRow.class);
+		
 		Inventory invToTake = ((TileEntityCarrier) chestToTake.get()).getInventory();
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 

@@ -83,11 +83,12 @@ public class iTrade extends Shop {
 	}
 	@Override
 	public boolean trigger(Player player) {
-		if (!hasEnough(player.getInventory(), toTake)) {
+		Inventory inv = player.getInventory().query(InventoryRow.class);
+		
+		if (!hasEnough(inv, toTake)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You are missing items for the trade!"));
 			return false;
 		}
-		Inventory inv = player.getInventory().query(InventoryRow.class);
 		
 		Builder itemsName = Text.builder();
 		for (Inventory item : toTake.slots()) {

@@ -78,12 +78,12 @@ public class iSell extends Shop {
 
 	@Override
 	public boolean trigger(Player player) {
-		if (!hasEnough(player.getInventory(), itemsTemplate)) {
+		Inventory inv = player.getInventory().query(InventoryRow.class);
+		
+		if (!hasEnough(inv, itemsTemplate)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have the items to sell!"));
 			return false;
 		}
-
-		Inventory inv = player.getInventory().query(InventoryRow.class);
 
 		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {

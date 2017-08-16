@@ -107,7 +107,9 @@ public class Sell extends Shop {
 	}
 	@Override
 	public boolean trigger(Player player) {
-		if (!hasEnough(player.getInventory(), itemsTemplate)) {
+		Inventory inv = player.getInventory().query(InventoryRow.class);
+		
+		if (!hasEnough(inv, itemsTemplate)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have the items to sell!"));
 			return false;
 		}
@@ -121,7 +123,6 @@ public class Sell extends Shop {
 			}
 		}
 
-		Inventory inv = player.getInventory().query(InventoryRow.class);
 		Inventory invChest = ((TileEntityCarrier) chest.get()).getInventory();
 
 		Builder itemsName = Text.builder();
