@@ -74,7 +74,7 @@ public class iBuy extends Shop {
 		}
 		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
 		player.sendMessage(builder.build());
-
+		update();
 	}
 	@Override
 	public boolean trigger(Player player) {
