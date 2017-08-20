@@ -110,7 +110,7 @@ public class iSell extends Shop {
 		
 		ShopsLogs.log(getOwner(), player, "sell", super.getLocations().get(0), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
 
-		player.sendMessage(Text.of("You sold", itemsName.build(), " for ", price));
+		player.sendMessage(Text.of("You sold", itemsName.build(), " for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
 		
 		return true;
 	}

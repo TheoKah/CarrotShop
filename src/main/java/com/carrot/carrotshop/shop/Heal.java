@@ -57,7 +57,7 @@ public class Heal extends Shop {
 
 	    player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());
 		
-		player.sendMessage(Text.of("You healed for ", price));
+		player.sendMessage(Text.of("You healed for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
 		
 		return true;
 	}

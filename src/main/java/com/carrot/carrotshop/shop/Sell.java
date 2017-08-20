@@ -151,7 +151,7 @@ public class Sell extends Shop {
 
 		ShopsLogs.log(getOwner(), player, "sell", super.getLocations().get(0), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
 
-		Text report = Text.of(" sold", itemsName.build(), " for ", price);
+		Text report = Text.of(" sold", itemsName.build(), " for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName());
 
 		player.sendMessage(Text.of("You", report));
 
