@@ -2,7 +2,7 @@ package com.carrot.carrotshop.shop;
 
 import java.math.BigDecimal;
 
-import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -55,9 +55,7 @@ public class Heal extends Shop {
 			return false;
 		}
 
-		HealthData health = player.getHealthData();
-	    health.set(health.maxHealth());
-	    player.offer(health);
+	    player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());
 		
 		player.sendMessage(Text.of("You healed for ", price));
 		
