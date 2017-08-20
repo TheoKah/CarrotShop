@@ -21,6 +21,7 @@ import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
 import com.carrot.carrotshop.ShopsData;
+import com.carrot.carrotshop.ShopsLogs;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -95,6 +96,8 @@ public class iBuy extends Shop {
 			}
 		}
 
+		ShopsLogs.log(getOwner(), player, "buy", super.getLocations().get(0), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
+		
 		player.sendMessage(Text.of("You bought", itemsName.build(), " for ", price));
 
 		return true;

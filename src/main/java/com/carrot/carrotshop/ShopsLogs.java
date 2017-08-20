@@ -1,7 +1,13 @@
 package com.carrot.carrotshop;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -10,17 +16,24 @@ import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 
 public class ShopsLogs {
@@ -32,10 +45,12 @@ public class ShopsLogs {
 		carrotLogsFolder.mkdirs();
 	}
 
-	public static Optional<String> getLog(UUID shopOwner) {
-		File fileBuy = new File(carrotLogsFolder, shopOwner.toString() + ".buy");
-		File fileSell = new File(carrotLogsFolder, shopOwner.toString() + ".sell");
-		File fileTrade = new File(carrotLogsFolder, shopOwner.toString() + ".trade");
+	public static Optional<String> getLog(UUID shopOwnerUUID) {
+		String shopOwner = shopOwnerUUID != null ? shopOwnerUUID.toString() : "server";
+
+		File fileBuy = new File(carrotLogsFolder, shopOwner + ".buy");
+		File fileSell = new File(carrotLogsFolder, shopOwner + ".sell");
+		File fileTrade = new File(carrotLogsFolder, shopOwner + ".trade");
 		if (!fileBuy.exists() && !fileSell.exists() && !fileTrade.exists())
 			return Optional.empty();
 
@@ -47,11 +62,13 @@ public class ShopsLogs {
 
 		Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
 
-		Optional<User> player = userStorage.get().get(shopOwner);
-		if (!player.isPresent())
-			return Optional.empty();
-		data.append(",\"player\":\"" + player.get().getName() + "\"");
-		data.append(",\"playerID\":\"" + player.get().getUniqueId().toString() + "\"");
+		if (shopOwnerUUID != null) {
+			Optional<User> player = userStorage.get().get(shopOwnerUUID);
+			if (!player.isPresent())
+				return Optional.empty();
+			data.append(",\"player\":\"" + player.get().getName() + "\"");
+			data.append(",\"playerID\":\"" + player.get().getUniqueId().toString() + "\"");
+		}
 		data.append(",\"motdplain\":\"" + Sponge.getServer().getMotd().toPlain() + "\"");
 		data.append(",\"motd\":\"" + TextSerializers.FORMATTING_CODE.serialize(Sponge.getServer().getMotd()) + "\"");
 
@@ -101,7 +118,9 @@ public class ShopsLogs {
 		return Optional.of(data.toString());
 	}
 
-	public static void log(UUID shopOwner, Player player, String type, Location<World> location, Optional<Integer> price, Optional<Inventory> itemsA, Optional<Inventory> itemsB) {
+	public static void log(UUID shopOwnerUUID, Player player, String type, Location<World> location, Optional<Integer> price, Optional<Inventory> itemsA, Optional<Inventory> itemsB) {
+
+		String shopOwner = shopOwnerUUID != null ? shopOwnerUUID.toString() : "server";
 
 		JsonObject newNode = new JsonObject();
 		newNode.addProperty("player", player.getName());
@@ -139,7 +158,7 @@ public class ShopsLogs {
 			newNode.add("items2", invToArray(itemsB.get()));
 
 		try {
-			File file = new File(carrotLogsFolder, shopOwner.toString() + "." + type);
+			File file = new File(carrotLogsFolder, shopOwner + "." + type);
 
 			if (!file.exists()) {
 				file.createNewFile();
@@ -170,6 +189,65 @@ public class ShopsLogs {
 			}
 		}
 		return array;
+	}
+
+	public static void generateReport(CommandSource src, UUID target) {
+		src.sendMessage(Text.of(TextColors.GOLD, "The report is being prepared..."));
+
+		Task.builder().execute(() -> {
+			Optional<String> query = ShopsLogs.getLog(target);
+
+			if (!query.isPresent()) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "No data found to generate report"));
+				return;
+			}
+
+			String url = "https://carrotshop-ffb97.firebaseio.com/shop.json";
+			String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+
+			HttpURLConnection connection = null;
+			try {
+				connection = (HttpURLConnection) new URL(url).openConnection();
+
+				connection.setDoOutput(true);
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Accept-Charset", charset);
+				connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
+
+
+				OutputStream output = connection.getOutputStream();	
+				output.write(query.get().getBytes(charset));
+
+				BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = br.readLine()) != null) {
+					sb.append(line+"\n");
+				}
+				br.close();
+
+				JsonElement jelement = new JsonParser().parse(sb.toString());
+				JsonObject  jobject = jelement.getAsJsonObject();
+
+
+				String reportURL = "http://carrotshop.xyz/" + jobject.get("name").getAsString() + ".htm";
+
+				src.sendMessage(Text.of(TextColors.GOLD, "Report is ready: ", Text.builder(reportURL)
+						.color(TextColors.DARK_AQUA)
+						.onClick(TextActions.openUrl(new URL(reportURL))).build()));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				CarrotShop.getLogger().error("ERROR: " + e.getMessage());
+				if (connection != null)
+					try {
+						CarrotShop.getLogger().error(connection.getResponseMessage());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+			}
+
+		}).async().name("CarrotShop - Report").submit(CarrotShop.getInstance());
 	}
 
 }

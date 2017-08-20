@@ -17,6 +17,7 @@ import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
 import com.carrot.carrotshop.ShopsData;
+import com.carrot.carrotshop.ShopsLogs;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -110,6 +111,8 @@ public class iTrade extends Shop {
 			}
 		}
 		
+		ShopsLogs.log(getOwner(), player, "trade", super.getLocations().get(0), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
+
 		player.sendMessage(Text.of("You traded", itemsName.build()));
 
 		return true;
