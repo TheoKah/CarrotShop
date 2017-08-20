@@ -215,6 +215,9 @@ public abstract class Shop {
 						needEconomy = true;
 						shop = new Bank(player, target);
 						break;
+					case "[heal]":
+						shop = new Heal(player, target);
+						break;
 					default:
 						return false;
 					}
