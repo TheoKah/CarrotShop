@@ -22,14 +22,14 @@ public class Bank extends Shop {
 		if (!player.hasPermission("carrotshop.create.bank"))
 			throw new ExceptionInInitializerError("You don't have perms to build a bank sign");
 
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an bank shop"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an bank sign"));
 	}
 
 	@Override
 	public void info(Player player) {
 
 		player.sendMessage(Text.of("Right click to see your balance"));
-
+		update();
 	}
 	
 	@Override
