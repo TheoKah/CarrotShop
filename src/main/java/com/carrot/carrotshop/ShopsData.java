@@ -17,6 +17,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.serializer.InventorySerializer;
+import com.carrot.carrotshop.shop.Bank;
 import com.carrot.carrotshop.shop.Buy;
 import com.carrot.carrotshop.shop.Sell;
 import com.carrot.carrotshop.shop.Shop;
@@ -104,6 +105,8 @@ public class ShopsData {
 						shopNode.getNode("shop").setValue(TypeToken.of(Buy.class), (Buy) shop);
 					else if (shop instanceof Sell)
 						shopNode.getNode("shop").setValue(TypeToken.of(Sell.class), (Sell) shop);
+					else if (shop instanceof Bank)
+						shopNode.getNode("shop").setValue(TypeToken.of(Bank.class), (Bank) shop);
 					else
 						continue;
 					shopNode.getNode("type").setValue(entry.getValue().getClass().getName());

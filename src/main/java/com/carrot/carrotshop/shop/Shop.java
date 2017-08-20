@@ -211,6 +211,10 @@ public abstract class Shop {
 						needEconomy = true;
 						shop = new Sell(player, target);
 						break;
+					case "[bank]":
+						needEconomy = true;
+						shop = new Bank(player, target);
+						break;
 					default:
 						return false;
 					}
