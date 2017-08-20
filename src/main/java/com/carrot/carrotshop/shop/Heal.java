@@ -35,7 +35,7 @@ public class Heal extends Shop {
 		if (price < 0)
 			throw new ExceptionInInitializerError("bad price");
 		
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an heal sign"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a heal sign"));
 	}
 
 	@Override
