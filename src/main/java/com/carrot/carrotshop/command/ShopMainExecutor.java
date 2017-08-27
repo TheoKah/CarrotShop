@@ -21,6 +21,7 @@ public class ShopMainExecutor implements CommandExecutor{
 		contents.add(Text.of(TextColors.GOLD, "/cs help", TextColors.GRAY, " - ", TextColors.YELLOW, "Print a link to the wiki"));
 		contents.add(Text.of(TextColors.GOLD, "/cs hide", TextColors.GRAY, " - ", TextColors.YELLOW, "Hide sign usage from chat"));
 		contents.add(Text.of(TextColors.GOLD, "/cs report", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a personal shop report"));
+		contents.add(Text.of(TextColors.GOLD, "/cs servreport", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a server shop report"));
 		contents.add(Text.of(TextColors.GOLD, "/cs report [player]", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a shop report for another player"));
 
 
