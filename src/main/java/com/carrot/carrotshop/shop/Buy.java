@@ -146,7 +146,7 @@ public class Buy extends Shop {
 			}
 		}
 
-		ShopsLogs.log(getOwner(), player, "buy", super.getLocations().get(0), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
+		ShopsLogs.log(getOwner(), player, "buy", super.getLocation(), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
 
 		Text report = Text.of(" bought", itemsName.build(), " for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName());
 

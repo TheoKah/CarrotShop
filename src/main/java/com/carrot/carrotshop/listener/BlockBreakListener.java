@@ -1,5 +1,7 @@
 package com.carrot.carrotshop.listener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.block.BlockSnapshot;
@@ -16,33 +18,38 @@ import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.shop.Shop;
 
 public class BlockBreakListener {
-	
+
 	@Listener
 	public void onBlockBreak(ChangeBlockEvent.Break event) {
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			if (transaction.isValid()) {
 				Optional<Location<World>> loc = transaction.getOriginal().getLocation();
 				if (loc.isPresent()) {
-					Optional<Shop> shop = ShopsData.getShop(loc.get());
-					if (shop.isPresent()) {
+					Optional<List<Shop>> shops = ShopsData.getShops(loc.get());
+					if (shops.isPresent()) {
 						Optional<Player> cause = event.getCause().first(Player.class);
-						if (cause.isPresent()) {
-							if (!shop.get().destroy(cause.get()))
-								event.setCancelled(true);
-						} else {
+						if (!cause.isPresent()) {
 							event.setCancelled(true);
 						}
+						List<Shop> toDelete = new ArrayList<>();
+						shops.get().forEach((shop) -> {
+							toDelete.add(shop);
+						});
+						toDelete.forEach((shop) -> {
+							if (!shop.destroy(cause.get()))
+								event.setCancelled(true);
+						});
 					}
 				}
 			}
 		}
 	}
-	
+
 	@Listener(order = Order.FIRST, beforeModifications = true)
 	public void onSignChanged(ChangeSignEvent event)
 	{
-		Optional<Shop> shop = ShopsData.getShop(event.getTargetTile().getLocation());
-		if (shop.isPresent()) {
+		Optional<List<Shop>> shops = ShopsData.getShops(event.getTargetTile().getLocation());
+		if (shops.isPresent()) {
 			event.setCancelled(true);
 		}
 	}

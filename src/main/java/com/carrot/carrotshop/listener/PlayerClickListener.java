@@ -1,5 +1,6 @@
 package com.carrot.carrotshop.listener;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
@@ -29,16 +30,18 @@ public class PlayerClickListener {
 		if (!optLoc.isPresent())
 			return;
 
-		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
-		if (shop.isPresent()) {
-			if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {
-				shop.get().trigger(player);
-				Sponge.getScheduler().createTaskBuilder().delayTicks(4).execute(
-						task -> {
-							shop.get().update();
-							task.cancel();
-						}).submit(CarrotShop.getInstance());
-			}
+		Optional<List<Shop>> shops = ShopsData.getShops(optLoc.get());
+		if (shops.isPresent()) {
+			shops.get().forEach((shop) -> {
+				if (shop.getLocation().equals(optLoc.get())) {
+					shop.trigger(player);
+					Sponge.getScheduler().createTaskBuilder().delayTicks(4).execute(
+							task -> {
+								shop.update();
+								task.cancel();
+							}).submit(CarrotShop.getInstance());
+				}
+			});
 		}
 	}
 
@@ -49,9 +52,13 @@ public class PlayerClickListener {
 		if (!optLoc.isPresent())
 			return;
 
-		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
-		if (shop.isPresent())
-			shop.get().info(player);
+		Optional<List<Shop>> shops = ShopsData.getShops(optLoc.get());
+		if (shops.isPresent()) {
+			shops.get().forEach((shop) -> {
+				if (shop.getLocation().equals(optLoc.get()))
+					shop.info(player);
+			});
+		}
 	}
 
 	@Listener(order=Order.FIRST, beforeModifications = true)
@@ -59,16 +66,17 @@ public class PlayerClickListener {
 	{
 		if (!player.gameMode().get().equals(GameModes.CREATIVE))
 			return;
-		
+
 		Optional<Location<World>> optLoc = event.getTargetBlock().getLocation();
 		if (!optLoc.isPresent())
 			return;
 
-		Optional<Shop> shop = ShopsData.getShop(optLoc.get());
+		Optional<List<Shop>> shop = ShopsData.getShops(optLoc.get());
 		if (shop.isPresent()) {
 			Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
-				if (!optItem.isPresent() || !optItem.get().getItem().equals(ItemTypes.BEDROCK))
-					event.setCancelled(true);
+
+			if (!optItem.isPresent() || (!optItem.get().getItem().equals(ItemTypes.BEDROCK) && !optItem.get().getItem().equals(ItemTypes.REDSTONE)))
+				event.setCancelled(true);
 		}
 	}
 
@@ -81,7 +89,7 @@ public class PlayerClickListener {
 
 		Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
 		if (optItem.isPresent() && optItem.get().getItem().equals(ItemTypes.REDSTONE)) {
-			if (optLoc.get().getBlockType() == BlockTypes.CHEST || optLoc.get().getBlockType() == BlockTypes.TRAPPED_CHEST) {
+			if (optLoc.get().getBlockType() == BlockTypes.CHEST || optLoc.get().getBlockType() == BlockTypes.TRAPPED_CHEST || optLoc.get().getBlockType() == BlockTypes.LEVER) {
 				event.setCancelled(true);
 				ShopsData.storeItemLocation(player, optLoc.get());
 			} else if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {

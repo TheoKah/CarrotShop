@@ -67,6 +67,10 @@ public abstract class Shop {
 		return false;
 	}
 
+	public Location<World> getLocation() {
+		return location;
+	}
+
 	public List<Location<World>> getLocations() {
 		List<Location<World>> locations = new ArrayList<>();
 		locations.add(location);
@@ -165,7 +169,7 @@ public abstract class Shop {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -218,6 +222,18 @@ public abstract class Shop {
 					case "[heal]":
 						shop = new Heal(player, target);
 						break;
+					case "[deviceon]":
+						needEconomy = true;
+						shop = new DeviceOn(player, target);
+						break;
+					case "[deviceoff]":
+						needEconomy = true;
+						shop = new DeviceOff(player, target);
+						break;
+					case "[toggle]":
+						needEconomy = true;
+						shop = new Toggle(player, target);
+						break;
 					default:
 						return false;
 					}
@@ -230,24 +246,22 @@ public abstract class Shop {
 				}
 
 				for (Location<World> loc : shop.getLocations()) {
-					Optional<Shop> oldShop = ShopsData.getShop(loc);
-					if (oldShop.isPresent()) {
-						if (!oldShop.get().destroy(player)) {
-							player.sendMessage(Text.of(TextColors.DARK_RED, "This shop would override a shop you do not own. Abort."));
-							for (Location<World> loc2 : shop.getLocations()) {
-								Optional<Shop> oldShop2 = ShopsData.getShop(loc2);
-								if (oldShop.isPresent())
-									oldShop2.get().update();
+					Optional<List<Shop>> oldShopList = ShopsData.getShops(loc);
+					if (oldShopList.isPresent()) {
+						for (Shop oldShop : oldShopList.get()) {
+							if (!oldShop.isOwner(player)) {
+								player.sendMessage(Text.of(TextColors.DARK_RED, "This shop would override a shop you do not own. Abort."));
+								return false;
 							}
-							return false;
 						}
 					}
 				}
-				for (Location<World> loc : shop.getLocations()) {
-					Optional<Shop> oldShop = ShopsData.getShop(loc);
-					if (oldShop.isPresent()) {
-						ShopsData.delShop(oldShop.get());
-					}
+
+				Optional<List<Shop>> oldShopList = ShopsData.getShops(shop.getLocation());
+				if (oldShopList.isPresent()) {
+					oldShopList.get().forEach((oldShop) -> {
+						oldShop.destroy(player);
+					});
 				}
 				ShopsData.addShop(shop);
 				return true;
