@@ -92,6 +92,7 @@ public class ShopsData {
 
 	public static void save() {
 		boolean hasErrors = false;
+		shopsNode.removeChild("shops");
 		for (Entry<Location<World>, List<Shop>> entry : shops.entrySet()) {
 			for (Shop shop : entry.getValue()) {
 				if (entry.getKey().equals(shop.getLocation())) {
