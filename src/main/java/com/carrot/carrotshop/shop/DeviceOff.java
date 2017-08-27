@@ -64,7 +64,7 @@ public class DeviceOff extends Shop {
 	
 	@Override
 	public void info(Player player) {
-		player.sendMessage(Text.of("Deactivate for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
+		player.sendMessage(Text.of("Deactivate for ", formatPrice(price), "?"));
 		update();
 	}
 	
@@ -79,7 +79,7 @@ public class DeviceOff extends Shop {
 		
 		lever.offer(Keys.POWERED, false, CarrotShop.getCause());
 		
-		player.sendMessage(Text.of("Device deactivated for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("Device deactivated for ", formatPrice(price)));
 
 		return true;
 	}

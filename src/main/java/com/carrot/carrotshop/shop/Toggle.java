@@ -68,7 +68,7 @@ public class Toggle extends Shop {
 
 	@Override
 	public void info(Player player) {
-		player.sendMessage(Text.of("Toggle for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
+		player.sendMessage(Text.of("Toggle for ", formatPrice(price), "?"));
 		update();
 	}
 	@Override
@@ -91,7 +91,7 @@ public class Toggle extends Shop {
 			}
 		}).delay(2, TimeUnit.SECONDS).submit(CarrotShop.getInstance());
 		
-		player.sendMessage(Text.of("Device toggled for 2 seconds for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("Device toggled for 2 seconds for ", formatPrice(price)));
 
 		return true;
 	}

@@ -73,7 +73,7 @@ public class iSell extends Shop {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
+		builder.append(Text.of(" for ", formatPrice(price), "?"));
 		player.sendMessage(builder.build());
 		update();
 	}
@@ -110,7 +110,7 @@ public class iSell extends Shop {
 		
 		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
 
-		player.sendMessage(Text.of("You sold", itemsName.build(), " for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("You sold", itemsName.build(), " for ", formatPrice(price)));
 		
 		return true;
 	}

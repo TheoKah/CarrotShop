@@ -98,7 +98,7 @@ public class Buy extends Shop {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(" for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
+		builder.append(Text.of(" for ", formatPrice(price), "?"));
 		player.sendMessage(builder.build());
 		if (!update())
 			player.sendMessage(Text.of(TextColors.GOLD, "This shop is empty!"));
@@ -148,7 +148,7 @@ public class Buy extends Shop {
 
 		ShopsLogs.log(getOwner(), player, "buy", super.getLocation(), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
 
-		Text report = Text.of(" bought", itemsName.build(), " for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName());
+		Text report = Text.of(" bought", itemsName.build(), " for ", formatPrice(price));
 
 		player.sendMessage(Text.of("You", report));
 

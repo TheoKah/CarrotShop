@@ -134,12 +134,24 @@ public abstract class Shop {
 			if (data.isPresent()) {
 				String priceLine = data.get().lines().get(3).toPlain().replaceAll("[^\\d]", "");
 				if (priceLine.length() == 0)
-					return -1;
+					return 0;
 				return Integer.parseInt(priceLine);
 
 			}
 		}
 		return -1;
+	}
+
+	static protected final String formatPrice(int price) {
+		switch (price) {
+		case 0:
+			return "free";
+		case 1:
+			return price + " " + CarrotShop.getEcoService().getDefaultCurrency().getDisplayName().toPlain();
+		default:
+			return price + " " + CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName().toPlain();
+		}
+
 	}
 
 	static public boolean hasEnough(Inventory inventory, Inventory needs) {

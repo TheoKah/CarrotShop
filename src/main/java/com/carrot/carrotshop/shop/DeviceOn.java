@@ -57,7 +57,7 @@ public class DeviceOn extends Shop {
 
 	@Override
 	public void info(Player player) {
-		player.sendMessage(Text.of("Activate for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName(), "?"));
+		player.sendMessage(Text.of("Activate for ", formatPrice(price), "?"));
 		update();
 	}
 	
@@ -79,7 +79,7 @@ public class DeviceOn extends Shop {
 	
 		lever.offer(Keys.POWERED, true, CarrotShop.getCause());
 		
-		player.sendMessage(Text.of("Device activated for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("Device activated for ", formatPrice(price)));
 
 		return true;
 	}

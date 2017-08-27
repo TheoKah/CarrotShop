@@ -41,7 +41,7 @@ public class Heal extends Shop {
 	@Override
 	public void info(Player player) {
 
-		player.sendMessage(Text.of("Heal for ", price));
+		player.sendMessage(Text.of("Heal for ", formatPrice(price), "?"));
 		update();
 		
 	}
@@ -57,7 +57,7 @@ public class Heal extends Shop {
 
 	    player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());
 		
-		player.sendMessage(Text.of("You healed for ", price, " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("You healed for ", formatPrice(price)));
 		
 		return true;
 	}
