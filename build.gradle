@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.carrot'
-version = '1.12'
+version = '1.13'
 description = 'A SignShop-like shop plugin for Sponge'
 
 dependencies {
