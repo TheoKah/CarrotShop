@@ -46,9 +46,11 @@ public class DeviceOff extends Shop {
 
 		lever = locations.peek();
 
-		price = getPrice(sign);
-		if (price < 0)
-			throw new ExceptionInInitializerError("bad price");
+		if (CarrotShop.getEcoService() != null) {
+			price = getPrice(sign);
+			if (price < 0)
+				throw new ExceptionInInitializerError("bad price");
+		}
 
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a device sign:"));
@@ -61,25 +63,31 @@ public class DeviceOff extends Shop {
 		locations.add(lever);
 		return locations;
 	}
-	
+
 	@Override
 	public void info(Player player) {
-		player.sendMessage(Text.of("Deactivate for ", formatPrice(price), "?"));
+		if (CarrotShop.getEcoService() != null)
+			player.sendMessage(Text.of("Deactivate for ", formatPrice(price), "?"));
+		else
+			player.sendMessage(Text.of("Deactivate?"));
 		update();
 	}
-	
+
 	@Override
 	public boolean trigger(Player player) {
-		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
-		if (result.getResult() != ResultType.SUCCESS) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
-			return false;
+		if (CarrotShop.getEcoService() != null) {
+			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+			TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+			if (result.getResult() != ResultType.SUCCESS) {
+				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+				return false;
+			}
+			player.sendMessage(Text.of("Device deactivated for ", formatPrice(price)));
+		} else {
+			player.sendMessage(Text.of("Device deactivated"));
 		}
-		
+
 		lever.offer(Keys.POWERED, false, CarrotShop.getCause());
-		
-		player.sendMessage(Text.of("Device deactivated for ", formatPrice(price)));
 
 		return true;
 	}

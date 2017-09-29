@@ -235,15 +235,12 @@ public abstract class Shop {
 						shop = new Heal(player, target);
 						break;
 					case "[deviceon]":
-						needEconomy = true;
 						shop = new DeviceOn(player, target);
 						break;
 					case "[deviceoff]":
-						needEconomy = true;
 						shop = new DeviceOff(player, target);
 						break;
 					case "[toggle]":
-						needEconomy = true;
 						shop = new Toggle(player, target);
 						break;
 					default:

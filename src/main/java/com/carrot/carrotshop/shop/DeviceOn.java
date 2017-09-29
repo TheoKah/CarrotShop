@@ -46,9 +46,11 @@ public class DeviceOn extends Shop {
 
 		lever = locations.peek();
 
-		price = getPrice(sign);
-		if (price < 0)
-			throw new ExceptionInInitializerError("bad price");
+		if (CarrotShop.getEcoService() != null) {
+			price = getPrice(sign);
+			if (price < 0)
+				throw new ExceptionInInitializerError("bad price");
+		}
 
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a device sign:"));
@@ -57,10 +59,13 @@ public class DeviceOn extends Shop {
 
 	@Override
 	public void info(Player player) {
-		player.sendMessage(Text.of("Activate for ", formatPrice(price), "?"));
+		if (CarrotShop.getEcoService() != null)
+			player.sendMessage(Text.of("Activate for ", formatPrice(price), "?"));
+		else
+			player.sendMessage(Text.of("Activate?"));
 		update();
 	}
-	
+
 	@Override
 	public List<Location<World>> getLocations() {
 		List<Location<World>> locations = super.getLocations();
@@ -70,16 +75,21 @@ public class DeviceOn extends Shop {
 
 	@Override
 	public boolean trigger(Player player) {
-		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
-		if (result.getResult() != ResultType.SUCCESS) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
-			return false;
+		if (CarrotShop.getEcoService() != null) {
+			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+			TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+			if (result.getResult() != ResultType.SUCCESS) {
+				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+				return false;
+			}
+			player.sendMessage(Text.of("Device activated for ", formatPrice(price)));
+		} else {
+			player.sendMessage(Text.of("Device activated"));
 		}
-	
+
 		lever.offer(Keys.POWERED, true, CarrotShop.getCause());
-		
-		player.sendMessage(Text.of("Device activated for ", formatPrice(price)));
+
+
 
 		return true;
 	}
