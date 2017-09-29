@@ -22,7 +22,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 public class Heal extends Shop {
 	@Setting
 	private int price;
-	
+
 	public Heal() {
 	}
 
@@ -30,11 +30,13 @@ public class Heal extends Shop {
 		super(sign);
 		if (!player.hasPermission("carrotshop.admin.heal"))
 			throw new ExceptionInInitializerError("You don't have perms to build a heal sign");
-		
-		price = getPrice(sign);
-		if (price < 0)
-			throw new ExceptionInInitializerError("bad price");
-		
+
+		if (CarrotShop.getEcoService() != null) {
+			price = getPrice(sign);
+			if (price < 0)
+				throw new ExceptionInInitializerError("bad price");
+		}
+
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a heal sign"));
 	}
 
@@ -43,22 +45,25 @@ public class Heal extends Shop {
 
 		player.sendMessage(Text.of("Heal for ", formatPrice(price), "?"));
 		update();
-		
+
 	}
-	
+
 	@Override
 	public boolean trigger(Player player) {
-		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
-		if (result.getResult() != ResultType.SUCCESS) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
-			return false;
+		if (CarrotShop.getEcoService() != null) {
+			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+			TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+			if (result.getResult() != ResultType.SUCCESS) {
+				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+				return false;
+			}
+			player.sendMessage(Text.of("You healed for ", formatPrice(price)));
 		}
+		else
+			player.sendMessage(Text.of("You healed"));
 
-	    player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());
-		
-		player.sendMessage(Text.of("You healed for ", formatPrice(price)));
-		
+		player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());
+
 		return true;
 	}
 
