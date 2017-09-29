@@ -14,6 +14,8 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -75,8 +77,9 @@ public class PlayerClickListener {
 		if (shop.isPresent()) {
 			Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
 
-			if (!optItem.isPresent() || (!optItem.get().getItem().equals(ItemTypes.BEDROCK) && !optItem.get().getItem().equals(ItemTypes.REDSTONE)))
+			if (!optItem.isPresent() || (!optItem.get().getItem().equals(ItemTypes.BEDROCK) && !optItem.get().getItem().equals(ItemTypes.REDSTONE) && !optItem.get().getItem().equals(ItemTypes.STICK))) {
 				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -95,6 +98,21 @@ public class PlayerClickListener {
 			} else if (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN) {
 				event.setCancelled(true);
 				Shop.build(player, optLoc.get());
+			}
+		} else if (ShopsData.hasMultipleCurrencies() && optItem.isPresent() && optItem.get().getItem().equals(ItemTypes.STICK)
+				&& (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN)) {
+			Optional<List<Shop>> optShop = ShopsData.getShops(optLoc.get());
+			if (optShop.isPresent()) {
+				event.setCancelled(true);
+				for (Shop shop : optShop.get()) {
+					if (shop.canLoopCurrency(player)) {
+						shop.loopCurrency();
+						if (shop.getCurrency() == null)
+							player.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop currency set to match server's config"));
+						else
+							player.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop currency set to ", TextColors.YELLOW, shop.getCurrency().getDisplayName()));
+					}
+				}
 			}
 		}
 	}

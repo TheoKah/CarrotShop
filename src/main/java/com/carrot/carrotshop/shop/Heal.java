@@ -36,14 +36,16 @@ public class Heal extends Shop {
 			if (price < 0)
 				throw new ExceptionInInitializerError("bad price");
 		}
-
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a heal sign"));
+		done(player);
 	}
 
 	@Override
 	public void info(Player player) {
-
-		player.sendMessage(Text.of("Heal for ", formatPrice(price), "?"));
+		if (CarrotShop.getEcoService() != null)
+			player.sendMessage(Text.of("Heal for ", formatPrice(price), "?"));
+		else
+			player.sendMessage(Text.of("Heal?"));
 		update();
 
 	}
@@ -52,7 +54,7 @@ public class Heal extends Shop {
 	public boolean trigger(Player player) {
 		if (CarrotShop.getEcoService() != null) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-			TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 			if (result.getResult() != ResultType.SUCCESS) {
 				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
 				return false;

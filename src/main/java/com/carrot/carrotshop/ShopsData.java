@@ -19,6 +19,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import com.carrot.carrotshop.serializer.CurrencySerializer;
 import com.carrot.carrotshop.serializer.InventorySerializer;
 import com.carrot.carrotshop.shop.Bank;
 import com.carrot.carrotshop.shop.Buy;
@@ -50,20 +51,17 @@ public class ShopsData {
 	private static ConfigurationLoader<CommentedConfigurationNode> loader;
 	private static Map<Location<World>, List<Shop>> shops = new HashMap<>();
 	private static Hashtable<UUID, Stack<Location<World>>> storedLocations = new Hashtable<>();
-	private static Currency currency;
+	private static Currency currency = null;
 
 	public static void init(File rootDir) throws IOException
 	{
-		if (CarrotShop.getEcoService() != null) {
-			currency = CarrotShop.getEcoService().getDefaultCurrency();
-		}
-		
 		carrotshopsFile = new File(rootDir, "shops.json");
 		rootDir.mkdirs();
 		carrotshopsFile.createNewFile();
 
 		TypeSerializerCollection serializers = TypeSerializers.getDefaultSerializers().newChild();
 		serializers.registerType(TypeToken.of(Inventory.class), new InventorySerializer());
+		serializers.registerType(TypeToken.of(Currency.class), new CurrencySerializer());
 		ConfigurationOptions options = ConfigurationOptions.defaults().setSerializers(serializers);
 
 		loader = HoconConfigurationLoader.builder().setFile(carrotshopsFile).build();
@@ -73,12 +71,12 @@ public class ShopsData {
 	public static void load() {
 		boolean hasErrors = false;
 
-		String candidateCurrencyID = shopsNode.getNode("config").getNode("currency").getString();
-
 		if (CarrotShop.getEcoService() != null) {
+			String candidateCurrencyID = shopsNode.getNode("globalconfig", "currency").getString();
 			for (Currency cur : CarrotShop.getEcoService().getCurrencies()) {
-				if (cur.getId().equals(candidateCurrencyID))
+				if (cur.getId().equals(candidateCurrencyID)) {
 					currency = cur;
+				}
 			}
 		}
 
@@ -108,7 +106,7 @@ public class ShopsData {
 	public static void save() {
 		boolean hasErrors = false;
 
-		shopsNode.getNode("config").getNode("currency").setValue(currency.getId());
+		shopsNode.getNode("globalconfig", "currency").setValue(currency.getId());
 
 		shopsNode.removeChild("shops");
 		for (Entry<Location<World>, List<Shop>> entry : shops.entrySet()) {
@@ -221,7 +219,14 @@ public class ShopsData {
 	}
 
 	public static Currency getCurrency() {
-		return currency;
+		if (CarrotShop.getEcoService() == null)
+			return null;
+		if (currency != null)
+			return currency;
+		return CarrotShop.getEcoService().getDefaultCurrency();
 	}
 
+	public static boolean hasMultipleCurrencies() {
+		return CarrotShop.getEcoService() != null && CarrotShop.getEcoService().getCurrencies().size() > 1;
+	}
 }

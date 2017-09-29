@@ -60,6 +60,7 @@ public class iBuy extends Shop {
 
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iBuy shop:"));
+		done(player);
 		info(player);
 	}
 
@@ -79,7 +80,7 @@ public class iBuy extends Shop {
 	@Override
 	public boolean trigger(Player player) {
 		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
 			return false;

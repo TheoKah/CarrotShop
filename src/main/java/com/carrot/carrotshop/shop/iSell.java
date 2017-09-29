@@ -61,6 +61,7 @@ public class iSell extends Shop {
 
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iSell shop:"));
+		done(player);
 		info(player);
 	}
 
@@ -102,7 +103,7 @@ public class iSell extends Shop {
 		}
 
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = sellerAccount.deposit(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		TransactionResult result = sellerAccount.deposit(getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Unable to give you the money!"));
 			return false;

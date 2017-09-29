@@ -68,6 +68,7 @@ public class Trade extends Shop {
 		setOwner(player);
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a Trade shop:"));
+		done(player);
 		info(player);
 	}
 
@@ -216,4 +217,8 @@ public class Trade extends Shop {
 		return true;
 	}
 
+	@Override
+	public boolean canLoopCurrency(Player src) {
+		return false;
+	}
 }

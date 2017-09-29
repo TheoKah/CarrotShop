@@ -59,6 +59,7 @@ public class iTrade extends Shop {
 		}
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iTrade shop:"));
+		done(player);
 		info(player);
 	}
 
@@ -82,6 +83,7 @@ public class iTrade extends Shop {
 		update();
 
 	}
+
 	@Override
 	public boolean trigger(Player player) {
 		Inventory inv = player.getInventory().query(InventoryRow.class);
@@ -118,4 +120,8 @@ public class iTrade extends Shop {
 		return true;
 	}
 
+	@Override
+	public boolean canLoopCurrency(Player src) {
+		return false;
+	}
 }

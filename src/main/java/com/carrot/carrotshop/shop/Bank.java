@@ -21,8 +21,8 @@ public class Bank extends Shop {
 		super(sign);
 		if (!player.hasPermission("carrotshop.create.bank"))
 			throw new ExceptionInInitializerError("You don't have perms to build a bank sign");
-
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a bank sign"));
+		done(player);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class Bank extends Shop {
 	public boolean trigger(Player player) {
 		UniqueAccount account = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 		
-		player.sendMessage(Text.of("Your balance: ", account.getBalance(CarrotShop.getEcoService().getDefaultCurrency()), " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("Your balance: ", account.getBalance(getCurrency()), " ", getCurrency().getPluralDisplayName()));
 
 		return true;
 	}

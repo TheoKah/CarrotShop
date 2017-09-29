@@ -19,6 +19,7 @@ import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
@@ -39,6 +40,9 @@ public abstract class Shop {
 	private UUID owner = null;
 	@Setting
 	private Location<World> location = null;
+	@Setting
+	private Currency currency = null;
+
 
 	public Shop() {
 	}
@@ -52,6 +56,13 @@ public abstract class Shop {
 
 	public abstract void info(Player player);
 	public abstract boolean trigger(Player player);
+
+	public final void done(Player player) {
+		if (canLoopCurrency(player)) {
+			player.sendMessage(Text.of(TextColors.GOLD, "This sign will use default currency: ", TextColors.YELLOW, getCurrency().getDisplayName()));
+			player.sendMessage(Text.of(TextColors.GOLD, "Left click the sign with a stick to use another currency"));
+		}
+	}
 
 	public boolean update() {
 		setOK();
@@ -75,6 +86,10 @@ public abstract class Shop {
 		List<Location<World>> locations = new ArrayList<>();
 		locations.add(location);
 		return locations;
+	}
+
+	public boolean canLoopCurrency(Player player) {
+		return ShopsData.hasMultipleCurrencies() && isOwner(player) && player.hasPermission("carrotshop.setup.currency");
 	}
 
 	protected final void setOwner(Player player) {
@@ -104,6 +119,44 @@ public abstract class Shop {
 
 	public final void setReset() {
 		setFirstLineColor(TextColors.RESET);
+	}
+
+	public final Currency getCurrency() {
+		if (ShopsData.hasMultipleCurrencies() && currency != null)
+			return currency;
+		return ShopsData.getCurrency();
+	}
+
+	public final void loopCurrency() {
+		if (!ShopsData.hasMultipleCurrencies())
+			return ;
+		
+		boolean takeNext = false;
+		if (currency == null)
+			currency = ShopsData.getCurrency();
+		
+		for (Currency cur : CarrotShop.getEcoService().getCurrencies()) {
+			CarrotShop.getLogger().info(cur.getName());
+			if (takeNext) {
+				currency = cur;
+				return ;
+			}
+			if (cur.equals(currency))
+				takeNext = true;
+		}
+		currency = null;
+	}
+
+	protected final String formatPrice(int price) {
+		switch (price) {
+		case 0:
+			return "free";
+		case 1:
+			return price + " " + getCurrency().getDisplayName().toPlain();
+		default:
+			return price + " " + getCurrency().getPluralDisplayName().toPlain();
+		}
+
 	}
 
 	private final void setFirstLineColor(TextColor color) {
@@ -136,22 +189,9 @@ public abstract class Shop {
 				if (priceLine.length() == 0)
 					return 0;
 				return Integer.parseInt(priceLine);
-
 			}
 		}
 		return -1;
-	}
-
-	static protected final String formatPrice(int price) {
-		switch (price) {
-		case 0:
-			return "free";
-		case 1:
-			return price + " " + CarrotShop.getEcoService().getDefaultCurrency().getDisplayName().toPlain();
-		default:
-			return price + " " + CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName().toPlain();
-		}
-
 	}
 
 	static public boolean hasEnough(Inventory inventory, Inventory needs) {

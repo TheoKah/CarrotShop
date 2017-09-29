@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -21,10 +22,13 @@ import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 
 import com.carrot.carrotshop.command.NoSpamExecutor;
+import com.carrot.carrotshop.command.ShopConfigCurrencyExecutor;
+import com.carrot.carrotshop.command.ShopConfigExecutor;
 import com.carrot.carrotshop.command.ShopMainExecutor;
 import com.carrot.carrotshop.command.ShopReportExecutor;
 import com.carrot.carrotshop.command.ShopServerReportExecutor;
 import com.carrot.carrotshop.command.ShopWikiExecutor;
+import com.carrot.carrotshop.command.element.CurrencyElement;
 import com.carrot.carrotshop.listener.BlockBreakListener;
 import com.carrot.carrotshop.listener.PlayerClickListener;
 import com.google.inject.Inject;
@@ -60,11 +64,11 @@ public class CarrotShop {
 	@Listener
 	public void onStart(GameStartedServerEvent event)
 	{
-		ShopsData.load();
-
 		Sponge.getServiceManager()
 		.getRegistration(EconomyService.class)
 		.ifPresent(prov -> economyService = prov.getProvider());
+		
+		ShopsData.load();
 
 		CommandSpec shopReport = CommandSpec.builder()
 				.description(Text.of("Generare a CarrotShop report"))
@@ -87,6 +91,19 @@ public class CarrotShop {
 				.executor(new ShopWikiExecutor())
 				.build();
 		
+		CommandSpec shopConfigCurrency = CommandSpec.builder()
+				.description(Text.of("Get/Set the default currency"))
+				.permission("carrotshop.config.currency")
+				.executor(new ShopConfigCurrencyExecutor())
+				.arguments(GenericArguments.optional(new CurrencyElement(Text.of("currency"))))
+				.build();
+		
+		CommandSpec shopConfig = CommandSpec.builder()
+				.description(Text.of("Change config of the plugin"))
+				.executor(new ShopConfigExecutor())
+				.child(shopConfigCurrency, "currency")
+				.build();
+		
 		CommandSpec shopMain = CommandSpec.builder()
 				.description(Text.of("Main CarrotShop command"))
 				.executor(new ShopMainExecutor())
@@ -94,6 +111,7 @@ public class CarrotShop {
 				.child(shopSpam, "hide", "shopchat", "stop", "off", "nospam", "spam", "toggle", "togglechat", "t")
 				.child(shopReport, "report", "shopreport", "r")
 				.child(shopServerReport, "serverreport", "server", "servreport", "sr")
+				.child(shopConfig, "config")
 				.build();
 
 		Sponge.getCommandManager().register(plugin, shopReport, "shopreport", "carrotshopreport", "cr", "sr");

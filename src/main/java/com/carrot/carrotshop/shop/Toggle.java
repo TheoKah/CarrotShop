@@ -58,6 +58,7 @@ public class Toggle extends Shop {
 
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a device sign:"));
+		done(player);
 		info(player);
 	}
 
@@ -80,7 +81,7 @@ public class Toggle extends Shop {
 	public boolean trigger(Player player) {
 		if (CarrotShop.getEcoService() != null) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-			TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 			if (result.getResult() != ResultType.SUCCESS) {
 				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
 				return false;

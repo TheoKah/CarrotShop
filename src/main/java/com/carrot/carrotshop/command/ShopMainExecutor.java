@@ -23,7 +23,7 @@ public class ShopMainExecutor implements CommandExecutor{
 		contents.add(Text.of(TextColors.GOLD, "/cs report", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a personal shop report"));
 		contents.add(Text.of(TextColors.GOLD, "/cs servreport", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a server shop report"));
 		contents.add(Text.of(TextColors.GOLD, "/cs report [player]", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a shop report for another player"));
-
+		contents.add(Text.of(TextColors.GOLD, "/cs config", TextColors.GRAY, " - ", TextColors.YELLOW, "Change config of the plugin"));
 
 		PaginationList.builder()
 		.title(Text.of(TextColors.GOLD, "{ ", TextColors.YELLOW, "/carrotshop", TextColors.GOLD, " }"))
