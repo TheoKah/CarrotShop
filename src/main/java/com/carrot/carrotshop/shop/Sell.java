@@ -124,7 +124,7 @@ public class Sell extends Shop {
 		}
 
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		if (sellerAccount.getBalance(ShopsData.getCurrency()).compareTo(BigDecimal.valueOf(price)) < 0) {
+		if (sellerAccount.getBalance(CarrotShop.getEcoService().getDefaultCurrency()).compareTo(BigDecimal.valueOf(price)) < 0) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Seller don't have enough money!"));
 			return false;
 		}
@@ -148,7 +148,7 @@ public class Sell extends Shop {
 		}
 
 		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(getOwner()).get();
-		TransactionResult result = buyerAccount.transfer(sellerAccount, ShopsData.getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		TransactionResult result = buyerAccount.transfer(sellerAccount, CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Seller don't have enough money!"));
 			return false;
