@@ -147,9 +147,9 @@ public abstract class Shop {
 		case 0:
 			return "free";
 		case 1:
-			return price + " " + CarrotShop.getEcoService().getDefaultCurrency().getDisplayName().toPlain();
+			return price + " " + ShopsData.getCurrency().getDisplayName().toPlain();
 		default:
-			return price + " " + CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName().toPlain();
+			return price + " " + ShopsData.getCurrency().getPluralDisplayName().toPlain();
 		}
 
 	}

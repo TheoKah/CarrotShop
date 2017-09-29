@@ -8,6 +8,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopsData;
 
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
@@ -36,7 +37,7 @@ public class Bank extends Shop {
 	public boolean trigger(Player player) {
 		UniqueAccount account = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 		
-		player.sendMessage(Text.of("Your balance: ", account.getBalance(CarrotShop.getEcoService().getDefaultCurrency()), " ", CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()));
+		player.sendMessage(Text.of("Your balance: ", account.getBalance(ShopsData.getCurrency()), " ", ShopsData.getCurrency().getPluralDisplayName()));
 
 		return true;
 	}

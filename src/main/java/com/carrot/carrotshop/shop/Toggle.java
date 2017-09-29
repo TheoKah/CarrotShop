@@ -74,7 +74,7 @@ public class Toggle extends Shop {
 	@Override
 	public boolean trigger(Player player) {
 		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.withdraw(CarrotShop.getEcoService().getDefaultCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		TransactionResult result = buyerAccount.withdraw(ShopsData.getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
 			return false;

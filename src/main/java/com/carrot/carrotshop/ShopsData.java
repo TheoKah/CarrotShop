@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -49,9 +50,14 @@ public class ShopsData {
 	private static ConfigurationLoader<CommentedConfigurationNode> loader;
 	private static Map<Location<World>, List<Shop>> shops = new HashMap<>();
 	private static Hashtable<UUID, Stack<Location<World>>> storedLocations = new Hashtable<>();
+	private static Currency currency;
 
 	public static void init(File rootDir) throws IOException
 	{
+		if (CarrotShop.getEcoService() != null) {
+			currency = CarrotShop.getEcoService().getDefaultCurrency();
+		}
+		
 		carrotshopsFile = new File(rootDir, "shops.json");
 		rootDir.mkdirs();
 		carrotshopsFile.createNewFile();
@@ -66,6 +72,15 @@ public class ShopsData {
 
 	public static void load() {
 		boolean hasErrors = false;
+
+		String candidateCurrencyID = shopsNode.getNode("config").getNode("currency").getString();
+
+		if (CarrotShop.getEcoService() != null) {
+			for (Currency cur : CarrotShop.getEcoService().getCurrencies()) {
+				if (cur.getId().equals(candidateCurrencyID))
+					currency = cur;
+			}
+		}
 
 		for (ConfigurationNode shopNode : shopsNode.getNode("shops").getChildrenList()) {
 			try {
@@ -92,6 +107,9 @@ public class ShopsData {
 
 	public static void save() {
 		boolean hasErrors = false;
+
+		shopsNode.getNode("config").getNode("currency").setValue(currency.getId());
+
 		shopsNode.removeChild("shops");
 		for (Entry<Location<World>, List<Shop>> entry : shops.entrySet()) {
 			for (Shop shop : entry.getValue()) {
@@ -195,6 +213,15 @@ public class ShopsData {
 	public static void clearItemLocations(Player player) {
 		storedLocations.remove(player.getUniqueId());
 
+	}
+
+	public static void setCurrency(Currency cur) {
+		currency = cur;
+		save();
+	}
+
+	public static Currency getCurrency() {
+		return currency;
 	}
 
 }
