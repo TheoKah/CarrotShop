@@ -107,10 +107,10 @@ public class PlayerClickListener {
 				for (Shop shop : optShop.get()) {
 					if (shop.canLoopCurrency(player)) {
 						shop.loopCurrency();
-						if (shop.getCurrency() == null)
-							player.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop currency set to match server's config"));
-						else
+						if (shop.hasCurrency())
 							player.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop currency set to ", TextColors.YELLOW, shop.getCurrency().getDisplayName()));
+						else
+							player.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop currency set to match server's config"));							
 					}
 				}
 			}

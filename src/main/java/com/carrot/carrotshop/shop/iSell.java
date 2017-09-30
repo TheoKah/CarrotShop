@@ -109,7 +109,7 @@ public class iSell extends Shop {
 			return false;
 		}
 		
-		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
+		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
 		player.sendMessage(Text.of("You sold", itemsName.build(), " for ", formatPrice(price)));
 		

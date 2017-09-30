@@ -155,7 +155,7 @@ public class Sell extends Shop {
 			return false;
 		}
 
-		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), Optional.of(itemsTemplate), Optional.empty());
+		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
 		Text report = Text.of(" sold", itemsName.build(), " for ", formatPrice(price));
 

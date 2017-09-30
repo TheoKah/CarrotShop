@@ -113,7 +113,7 @@ public class iTrade extends Shop {
 			}
 		}
 		
-		ShopsLogs.log(getOwner(), player, "trade", super.getLocation(), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
+		ShopsLogs.log(getOwner(), player, "trade", super.getLocation(), Optional.empty(), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
 
 		player.sendMessage(Text.of("You traded", itemsName.build()));
 

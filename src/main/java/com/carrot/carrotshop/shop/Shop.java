@@ -122,21 +122,39 @@ public abstract class Shop {
 	}
 
 	public final Currency getCurrency() {
-		if (ShopsData.hasMultipleCurrencies() && currency != null)
+		if (hasCurrency())
 			return currency;
 		return ShopsData.getCurrency();
+	}
+
+	protected final Optional<Currency> getRawCurrency() {
+		if (hasCurrency())
+			return Optional.of(currency);
+		return Optional.empty();
+	}
+
+	public boolean hasCurrency() {
+		return ShopsData.hasMultipleCurrencies() && currency != null;
 	}
 
 	public final void loopCurrency() {
 		if (!ShopsData.hasMultipleCurrencies())
 			return ;
-		
+
+		if (ShopsData.getCurrency().equals(currency)) {
+			currency = null;
+			return ;
+		}
+
 		boolean takeNext = false;
+		Currency first = null;
+
 		if (currency == null)
 			currency = ShopsData.getCurrency();
-		
+
 		for (Currency cur : CarrotShop.getEcoService().getCurrencies()) {
-			CarrotShop.getLogger().info(cur.getName());
+			if (first == null)
+				first = cur;
 			if (takeNext) {
 				currency = cur;
 				return ;
@@ -144,7 +162,7 @@ public abstract class Shop {
 			if (cur.equals(currency))
 				takeNext = true;
 		}
-		currency = null;
+		currency = first;
 	}
 
 	protected final String formatPrice(int price) {

@@ -22,6 +22,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -118,7 +119,7 @@ public class ShopsLogs {
 		return Optional.of(data.toString());
 	}
 
-	public static void log(UUID shopOwnerUUID, Player player, String type, Location<World> location, Optional<Integer> price, Optional<Inventory> itemsA, Optional<Inventory> itemsB) {
+	public static void log(UUID shopOwnerUUID, Player player, String type, Location<World> location, Optional<Integer> price, Optional<Currency> currency, Optional<Inventory> itemsA, Optional<Inventory> itemsB) {
 
 		String shopOwner = shopOwnerUUID != null ? shopOwnerUUID.toString() : "server";
 
@@ -133,7 +134,7 @@ public class ShopsLogs {
 		locationNode.addProperty("X", location.getBlockX());
 		locationNode.addProperty("Y", location.getBlockY());
 		locationNode.addProperty("Z", location.getBlockZ());
-
+		
 		Optional<TileEntity> sign = location.getTileEntity();
 		if (sign.isPresent() && sign.get().supports(SignData.class)) {
 			Optional<SignData> data = sign.get().getOrCreate(SignData.class);
@@ -146,7 +147,16 @@ public class ShopsLogs {
 		}
 
 		newNode.add("sign", locationNode);
-
+		
+		if (ShopsData.hasMultipleCurrencies() && currency.isPresent()) {
+			JsonObject currencyNode = new JsonObject();
+			currencyNode.addProperty("currencySymbol", TextSerializers.FORMATTING_CODE.serialize(currency.get().getSymbol()));
+			currencyNode.addProperty("currencySymbolplain", currency.get().getSymbol().toPlain());
+			currencyNode.addProperty("currencyName", currency.get().getName());
+			currencyNode.addProperty("currencyDName", TextSerializers.FORMATTING_CODE.serialize(currency.get().getDisplayName()));
+			currencyNode.addProperty("currencyPDName", TextSerializers.FORMATTING_CODE.serialize(currency.get().getPluralDisplayName()));
+			newNode.add("currency", currencyNode);
+		}
 
 		if (price.isPresent())
 			newNode.addProperty("price", price.get());
