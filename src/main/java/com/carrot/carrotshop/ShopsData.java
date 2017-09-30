@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class ShopsData {
 	private static ConfigurationLoader<CommentedConfigurationNode> loader;
 	private static Map<Location<World>, List<Shop>> shops = new HashMap<>();
 	private static Hashtable<UUID, Stack<Location<World>>> storedLocations = new Hashtable<>();
+	private static HashSet<UUID> soldThings = new HashSet<>();
 	private static Currency currency = null;
 
 	public static void init(File rootDir) throws IOException
@@ -77,6 +79,15 @@ public class ShopsData {
 				if (cur.getId().equals(candidateCurrencyID)) {
 					currency = cur;
 				}
+			}
+		}
+
+		for (ConfigurationNode soldThingsNode : shopsNode.getNode("notifications", "soldthings").getChildrenList()) {
+			try {
+				soldThings.add(soldThingsNode.getValue(TypeToken.of(UUID.class)));
+			} catch (ObjectMappingException e) {
+				e.printStackTrace();
+				hasErrors = true;
 			}
 		}
 
@@ -107,6 +118,15 @@ public class ShopsData {
 		boolean hasErrors = false;
 
 		shopsNode.getNode("globalconfig", "currency").setValue(currency.getId());
+
+		shopsNode.getNode("notifications").removeChild("soldthings");
+		for (UUID uuid : soldThings) {
+			try {
+				shopsNode.getNode("notifications", "soldthings").getAppendedNode().setValue(TypeToken.of(UUID.class), uuid);
+			} catch (ObjectMappingException e) {
+				e.printStackTrace();
+			}
+		}
 
 		shopsNode.removeChild("shops");
 		for (Entry<Location<World>, List<Shop>> entry : shops.entrySet()) {
@@ -228,5 +248,23 @@ public class ShopsData {
 
 	public static boolean hasMultipleCurrencies() {
 		return CarrotShop.getEcoService() != null && CarrotShop.getEcoService().getCurrencies().size() > 1;
+	}
+
+	public static void soldSomethingOffline(UUID uuid) {
+		if (!soldThings.contains(uuid)) {
+			soldThings.add(uuid);
+			save();
+		}
+	}
+
+	public static boolean hasSoldSomethingOffline(UUID uuid) {
+		boolean ret = false;
+
+		if (soldThings.contains(uuid)) {
+			ret = true;
+			soldThings.remove(uuid);
+			save();
+		}
+		return ret;
 	}
 }

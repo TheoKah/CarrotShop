@@ -123,6 +123,13 @@ public class ShopsLogs {
 
 		String shopOwner = shopOwnerUUID != null ? shopOwnerUUID.toString() : "server";
 
+		if (shopOwnerUUID != null) {
+			Optional<Player> seller = Sponge.getServer().getPlayer(shopOwnerUUID);
+			if (!seller.isPresent()) {
+				ShopsData.soldSomethingOffline(shopOwnerUUID);
+			}
+		}
+
 		JsonObject newNode = new JsonObject();
 		newNode.addProperty("player", player.getName());
 		newNode.addProperty("playerID", player.getUniqueId().toString());
@@ -134,7 +141,7 @@ public class ShopsLogs {
 		locationNode.addProperty("X", location.getBlockX());
 		locationNode.addProperty("Y", location.getBlockY());
 		locationNode.addProperty("Z", location.getBlockZ());
-		
+
 		Optional<TileEntity> sign = location.getTileEntity();
 		if (sign.isPresent() && sign.get().supports(SignData.class)) {
 			Optional<SignData> data = sign.get().getOrCreate(SignData.class);
@@ -147,7 +154,7 @@ public class ShopsLogs {
 		}
 
 		newNode.add("sign", locationNode);
-		
+
 		if (ShopsData.hasMultipleCurrencies() && currency.isPresent()) {
 			JsonObject currencyNode = new JsonObject();
 			currencyNode.addProperty("currencySymbol", TextSerializers.FORMATTING_CODE.serialize(currency.get().getSymbol()));

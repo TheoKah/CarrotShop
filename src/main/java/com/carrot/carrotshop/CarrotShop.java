@@ -30,6 +30,7 @@ import com.carrot.carrotshop.command.ShopWikiExecutor;
 import com.carrot.carrotshop.command.element.CurrencyElement;
 import com.carrot.carrotshop.listener.BlockBreakListener;
 import com.carrot.carrotshop.listener.PlayerClickListener;
+import com.carrot.carrotshop.listener.PlayerConnexionListener;
 import com.google.inject.Inject;
 
 @Plugin(id = "carrotshop", name = "CarrotShop", authors={"Carrot"}, url="https://github.com/TheoKah/CarrotShop")
@@ -121,6 +122,7 @@ public class CarrotShop {
 
 		Sponge.getEventManager().registerListeners(this, new PlayerClickListener());
 		Sponge.getEventManager().registerListeners(this, new BlockBreakListener());
+		Sponge.getEventManager().registerListeners(this, new PlayerConnexionListener());
 	}
 
 	@Listener
