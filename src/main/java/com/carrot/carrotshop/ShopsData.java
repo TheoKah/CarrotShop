@@ -22,18 +22,7 @@ import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.serializer.CurrencySerializer;
 import com.carrot.carrotshop.serializer.InventorySerializer;
-import com.carrot.carrotshop.shop.Bank;
-import com.carrot.carrotshop.shop.Buy;
-import com.carrot.carrotshop.shop.DeviceOff;
-import com.carrot.carrotshop.shop.DeviceOn;
-import com.carrot.carrotshop.shop.Heal;
-import com.carrot.carrotshop.shop.Sell;
-import com.carrot.carrotshop.shop.Shop;
-import com.carrot.carrotshop.shop.Toggle;
-import com.carrot.carrotshop.shop.Trade;
-import com.carrot.carrotshop.shop.iBuy;
-import com.carrot.carrotshop.shop.iSell;
-import com.carrot.carrotshop.shop.iTrade;
+import com.carrot.carrotshop.shop.*;
 import com.google.common.reflect.TypeToken;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -142,6 +131,12 @@ public class ShopsData {
 							shopNode.getNode("shop").setValue(TypeToken.of(iBuy.class), (iBuy) shop);
 						else if (shop instanceof iSell)
 							shopNode.getNode("shop").setValue(TypeToken.of(iSell.class), (iSell) shop);
+						else if (shop instanceof aTrade)
+							shopNode.getNode("shop").setValue(TypeToken.of(aTrade.class), (aTrade) shop);
+						else if (shop instanceof aBuy)
+							shopNode.getNode("shop").setValue(TypeToken.of(aBuy.class), (aBuy) shop);
+						else if (shop instanceof aSell)
+							shopNode.getNode("shop").setValue(TypeToken.of(aSell.class), (aSell) shop);
 						else if (shop instanceof Trade)
 							shopNode.getNode("shop").setValue(TypeToken.of(Trade.class), (Trade) shop);
 						else if (shop instanceof Buy)
