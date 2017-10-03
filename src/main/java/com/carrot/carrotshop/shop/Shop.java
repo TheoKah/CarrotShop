@@ -274,6 +274,17 @@ public abstract class Shop {
 						needEconomy = true;
 						shop = new iSell(player, target);
 						break;
+					case "[atrade]":
+						shop = new aTrade(player, target);
+						break;
+					case "[abuy]":
+						needEconomy = true;
+						shop = new aBuy(player, target);
+						break;
+					case "[asell]":
+						needEconomy = true;
+						shop = new aSell(player, target);
+						break;
 					case "[trade]":
 						shop = new Trade(player, target);
 						break;
