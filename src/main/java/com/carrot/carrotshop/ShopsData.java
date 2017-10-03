@@ -117,8 +117,10 @@ public class ShopsData {
 	public static void save() {
 		boolean hasErrors = false;
 
-		shopsNode.getNode("globalconfig", "currency").setValue(currency.getId());
-
+		if (CarrotShop.getEcoService() != null) {
+			shopsNode.getNode("globalconfig", "currency").setValue(getCurrency().getId());
+		}
+		
 		shopsNode.getNode("notifications").removeChild("soldthings");
 		for (UUID uuid : soldThings) {
 			try {
