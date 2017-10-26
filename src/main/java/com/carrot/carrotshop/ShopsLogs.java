@@ -199,7 +199,7 @@ public class ShopsLogs {
 		for (Inventory slot : inv.slots()) {
 			if (slot.peek().isPresent()) {
 				JsonObject item = new JsonObject();
-				item.addProperty("id", slot.peek().get().getItem().getId());
+				item.addProperty("id", slot.peek().get().getType().getId());
 				item.addProperty("name", slot.peek().get().getTranslation().get());
 				item.addProperty("quantity", slot.peek().get().getQuantity());
 				array.add(item);

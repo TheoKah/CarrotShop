@@ -147,7 +147,7 @@ public class CarrotShop {
 
 	public static Cause getCause()
 	{
-		return Cause.source(Sponge.getPluginManager().fromInstance(CarrotShop.getInstance()).get()).build();
+		return Sponge.getCauseStackManager().getCurrentCause();
 	}
 
 	public static boolean noSpam(UUID uuid) {
