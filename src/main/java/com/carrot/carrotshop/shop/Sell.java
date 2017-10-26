@@ -9,7 +9,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
@@ -149,7 +148,7 @@ public class Sell extends Shop {
 		}
 
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		TransactionResult result = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Shop owner don't have enough money!"));
 			return false;

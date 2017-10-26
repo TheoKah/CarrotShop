@@ -11,7 +11,6 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
@@ -81,7 +80,7 @@ public class Toggle extends Shop {
 	public boolean trigger(Player player) {
 		if (CarrotShop.getEcoService() != null) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 			if (result.getResult() != ResultType.SUCCESS) {
 				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
 				return false;

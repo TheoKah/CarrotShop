@@ -7,7 +7,6 @@ import java.util.Stack;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
@@ -103,7 +102,7 @@ public class iSell extends Shop {
 		}
 
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = sellerAccount.deposit(getCurrency(), BigDecimal.valueOf(price), Cause.source(this).build());
+		TransactionResult result = sellerAccount.deposit(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "Unable to give you the money!"));
 			return false;
