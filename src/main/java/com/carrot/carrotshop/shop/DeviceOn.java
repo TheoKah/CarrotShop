@@ -87,7 +87,7 @@ public class DeviceOn extends Shop {
 			player.sendMessage(Text.of("Device activated"));
 		}
 
-		lever.offer(Keys.POWERED, true, CarrotShop.getCause());
+		//lever.offer(Keys.POWERED, true, CarrotShop.getCause());
 
 
 

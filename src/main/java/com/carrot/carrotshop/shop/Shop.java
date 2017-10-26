@@ -303,15 +303,15 @@ public abstract class Shop {
 					case "[heal]":
 						shop = new Heal(player, target);
 						break;
-					case "[deviceon]":
-						shop = new DeviceOn(player, target);
-						break;
-					case "[deviceoff]":
-						shop = new DeviceOff(player, target);
-						break;
-					case "[toggle]":
-						shop = new Toggle(player, target);
-						break;
+//					case "[deviceon]":
+//						shop = new DeviceOn(player, target);
+//						break;
+//					case "[deviceoff]":
+//						shop = new DeviceOff(player, target);
+//						break;
+//					case "[toggle]":
+//						shop = new Toggle(player, target);
+//						break;
 					default:
 						return false;
 					}

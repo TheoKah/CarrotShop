@@ -90,14 +90,14 @@ public class Toggle extends Shop {
 			player.sendMessage(Text.of("Device toggled for 2 seconds"));
 		}
 
-		lever.offer(Keys.POWERED, true, CarrotShop.getCause());
+		//lever.offer(Keys.POWERED, true, CarrotShop.getCause());
 
 		Sponge.getScheduler().createTaskBuilder().execute(new Consumer<Task>() {
 
 			@Override
 			public void accept(Task t) {
 				t.cancel();
-				lever.offer(Keys.POWERED, false, CarrotShop.getCause());
+				//lever.offer(Keys.POWERED, false, CarrotShop.getCause());
 			}
 		}).delay(2, TimeUnit.SECONDS).submit(CarrotShop.getInstance());
 

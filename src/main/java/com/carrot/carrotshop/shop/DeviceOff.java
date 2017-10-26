@@ -87,7 +87,7 @@ public class DeviceOff extends Shop {
 			player.sendMessage(Text.of("Device deactivated"));
 		}
 
-		lever.offer(Keys.POWERED, false, CarrotShop.getCause());
+		//lever.offer(Keys.POWERED, false, CarrotShop.getCause());
 
 		return true;
 	}
