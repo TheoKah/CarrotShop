@@ -16,9 +16,9 @@ public class PlayerConnexionListener {
 	{
 		if (ShopsData.hasSoldSomethingOffline(event.getTargetEntity().getUniqueId()) && event.getTargetEntity().hasPermission("carrotshop.report.self")) {
 			event.getTargetEntity().sendMessage(Text.of(TextColors.YELLOW, "Someone used your shop signs while you were away. Use ",
-					Text.builder("/cs report")
+					Text.builder("/carrotreport")
 					.color(TextColors.DARK_AQUA)
-					.onClick(TextActions.runCommand("/cs report")).build(),
+					.onClick(TextActions.runCommand("/carrotreport")).build(),
 					TextColors.YELLOW, " for more details" ));
 		}
 	}
