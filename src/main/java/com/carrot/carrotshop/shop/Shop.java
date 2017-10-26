@@ -13,9 +13,6 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -193,9 +190,7 @@ public abstract class Shop {
 		Extent extent = spawnLocation.getExtent();
 		Entity item = extent.createEntity(EntityTypes.ITEM, spawnLocation.getPosition());
 		item.offer(Keys.REPRESENTED_ITEM, itemStackSnapshop);
-		extent.spawnEntity(item, Cause.source(EntitySpawnCause.builder()
-				.entity(item).type(SpawnTypes.PLUGIN).build()).build());
-
+		extent.spawnEntity(item);
 	}
 
 	static protected final int getPrice(Location<World> location) {
