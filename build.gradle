@@ -3,9 +3,9 @@ plugins {
 }
 
 group = 'com.carrot'
-version = '1.15'
+version = '1.15-S7.0-MC1.12.2'
 description = 'A SignShop-like shop plugin for Sponge'
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:5.1.0'
+    compile 'org.spongepowered:spongeapi:7.0.0-20171018.222656-46'
 }
