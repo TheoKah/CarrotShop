@@ -77,7 +77,7 @@ public class PlayerClickListener {
 		if (shop.isPresent()) {
 			Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
 
-			if (!optItem.isPresent() || (!optItem.get().getItem().equals(ItemTypes.BEDROCK) && !optItem.get().getItem().equals(ItemTypes.REDSTONE) && !optItem.get().getItem().equals(ItemTypes.STICK))) {
+			if (!optItem.isPresent() || (!optItem.get().getType().equals(ItemTypes.BEDROCK) && !optItem.get().getType().equals(ItemTypes.REDSTONE) && !optItem.get().getType().equals(ItemTypes.STICK))) {
 				event.setCancelled(true);
 			}
 		}
@@ -91,7 +91,7 @@ public class PlayerClickListener {
 			return;
 
 		Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
-		if (optItem.isPresent() && optItem.get().getItem().equals(ItemTypes.REDSTONE)) {
+		if (optItem.isPresent() && optItem.get().getType().equals(ItemTypes.REDSTONE)) {
 			if (optLoc.get().getBlockType() == BlockTypes.CHEST || optLoc.get().getBlockType() == BlockTypes.TRAPPED_CHEST || optLoc.get().getBlockType() == BlockTypes.LEVER) {
 				event.setCancelled(true);
 				ShopsData.storeItemLocation(player, optLoc.get());
@@ -99,7 +99,7 @@ public class PlayerClickListener {
 				event.setCancelled(true);
 				Shop.build(player, optLoc.get());
 			}
-		} else if (ShopsData.hasMultipleCurrencies() && optItem.isPresent() && optItem.get().getItem().equals(ItemTypes.STICK)
+		} else if (ShopsData.hasMultipleCurrencies() && optItem.isPresent() && optItem.get().getType().equals(ItemTypes.STICK)
 				&& (optLoc.get().getBlockType() == BlockTypes.STANDING_SIGN || optLoc.get().getBlockType() == BlockTypes.WALL_SIGN)) {
 			Optional<List<Shop>> optShop = ShopsData.getShops(optLoc.get());
 			if (optShop.isPresent()) {
