@@ -99,7 +99,7 @@ public class iTrade extends Shop {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					inv.query(template.get()).poll(item.peek().get().getQuantity());
+					inv.queryAny(template.get()).poll(item.peek().get().getQuantity());
 				}
 			}
 		}

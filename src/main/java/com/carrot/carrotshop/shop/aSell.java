@@ -131,7 +131,7 @@ public class aSell extends Shop {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
+					Optional<ItemStack> items = inv.queryAny(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						invChest.offer(items.get());
 					} else {

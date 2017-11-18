@@ -209,9 +209,9 @@ public abstract class Shop {
 
 	static public boolean hasEnough(Inventory inventory, Inventory needs) {
 		for (Inventory item : needs.slots()) {
-			if (item.peek().isPresent()) {
+			if (item.peek().isPresent()) {		
 				Optional<ItemStack> template = getTemplate(inventory, item.peek().get());
-				if (!template.isPresent() || inventory.query(template.get()).totalItems() < item.totalItems())
+				if (!template.isPresent() || inventory.queryAny(template.get()).totalItems() < needs.queryAny(item.peek().get()).totalItems())
 					return false;
 			}
 		}

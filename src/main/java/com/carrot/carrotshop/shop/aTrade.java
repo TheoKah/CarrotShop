@@ -170,7 +170,7 @@ public class aTrade extends Shop {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
+					Optional<ItemStack> items = inv.queryAny(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						invToTake.offer(items.get());
 					} else {
@@ -187,7 +187,7 @@ public class aTrade extends Shop {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
+					Optional<ItemStack> items = invToGive.queryAny(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						inv.offer(items.get()).getRejectedItems().forEach(action -> {
 							putItemInWorld(action, player.getLocation());
