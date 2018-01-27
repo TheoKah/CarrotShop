@@ -336,7 +336,11 @@ public abstract class Shop {
 
 				Optional<List<Shop>> oldShopList = ShopsData.getShops(shop.getLocation());
 				if (oldShopList.isPresent()) {
+					List<Shop> toDelete = new ArrayList<>();
 					oldShopList.get().forEach((oldShop) -> {
+						toDelete.add(oldShop);
+					});
+					toDelete.forEach((oldShop) -> {
 						oldShop.destroy(player);
 					});
 				}
