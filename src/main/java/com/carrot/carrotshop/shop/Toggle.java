@@ -21,6 +21,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -32,6 +33,8 @@ public class Toggle extends Shop {
 	private Location<World> lever;
 	@Setting
 	private int price;
+	
+	static private String type = "Toggle";
 
 	public Toggle() {
 	}
@@ -39,24 +42,24 @@ public class Toggle extends Shop {
 	public Toggle(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		if (!player.hasPermission("carrotshop.create.device"))
-			throw new ExceptionInInitializerError("You don't have perms to build a device sign");
+			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.isEmpty())
-			throw new ExceptionInInitializerError("Device signs require a lever");
+			throw new ExceptionInInitializerError(Lang.SHOP_LEVER.replace("%type%", type));
 		BlockState targetBlock = locations.peek().getBlock();
 		if (!targetBlock.getType().equals(BlockTypes.LEVER))
-			throw new ExceptionInInitializerError("Device signs require a lever");
+			throw new ExceptionInInitializerError(Lang.SHOP_LEVER.replace("%type%", type));
 
 		lever = locations.peek();
 
 		if (CarrotShop.getEcoService() != null) {
 			price = getPrice(sign);
 			if (price < 0)
-				throw new ExceptionInInitializerError("bad price");
+				throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
 		}
 
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a device sign:"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
 	}
@@ -71,9 +74,9 @@ public class Toggle extends Shop {
 	@Override
 	public void info(Player player) {
 		if (CarrotShop.getEcoService() != null)
-			player.sendMessage(Text.of("Toggle for ", formatPrice(price), "?"));
+			player.sendMessage(Text.of(Lang.SHOP_TOGGLE_HELP.replace("%price%", formatPrice(price))));
 		else
-			player.sendMessage(Text.of("Toggle?"));
+			player.sendMessage(Text.of(Lang.SHOP_TOGGLE_HELP_NOECON));
 		update();
 	}
 	@Override
@@ -82,12 +85,12 @@ public class Toggle extends Shop {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 			if (result.getResult() != ResultType.SUCCESS) {
-				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+				player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 				return false;
 			}
-			player.sendMessage(Text.of("Device toggled for 2 seconds for ", formatPrice(price)));
+			player.sendMessage(Text.of(Lang.SHOP_TOGGLE.replace("%price%", formatPrice(price))));
 		} else {
-			player.sendMessage(Text.of("Device toggled for 2 seconds"));
+			player.sendMessage(Text.of(Lang.SHOP_TOGGLE_NOECON));
 		}
 
 		lever.offer(Keys.POWERED, true, CarrotShop.getCause());

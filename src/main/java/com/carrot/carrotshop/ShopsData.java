@@ -89,7 +89,7 @@ public class ShopsData {
 			}
 		}
 		if (hasErrors)
-			CarrotShop.getLogger().warn("Errors occured while loading CarrotShops.");
+			CarrotShop.getLogger().warn(Lang.CONSOLE_ERROR_LOAD);
 	}
 
 	public static void unload() {
@@ -212,11 +212,11 @@ public class ShopsData {
 		Stack<Location<World>> items = storedLocations.getOrDefault(player.getUniqueId(), new Stack<>());
 		if (items.contains(loc)) {
 			items.remove(loc);
-			player.sendMessage(Text.of("Removed location of item"));
+			player.sendMessage(Text.of(Lang.LOCATION_REMOVED));
 			return ;
 		} else {
 			items.push(loc);
-			player.sendMessage(Text.of("Stored location of item"));
+			player.sendMessage(Text.of(Lang.LOCATION_STORED));
 		}
 		storedLocations.put(player.getUniqueId(), items);
 	}

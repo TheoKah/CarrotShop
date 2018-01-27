@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsLogs;
 
 public class ShopReportExecutor implements CommandExecutor{
@@ -25,7 +26,7 @@ public class ShopReportExecutor implements CommandExecutor{
 
 		if (user.isPresent()) {
 			if (!src.hasPermission("carrotshop.report.other")) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to generate reports for other players"));
+				src.sendMessage(Text.of(TextColors.DARK_RED, Lang.REPORT_ERROR_OPERM));
 				return CommandResult.success();
 			}
 
@@ -33,7 +34,7 @@ public class ShopReportExecutor implements CommandExecutor{
 
 		} else {
 			if (!src.hasPermission("carrotshop.report.self")) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to generate reports"));
+				src.sendMessage(Text.of(TextColors.DARK_RED, Lang.REPORT_ERROR_PERM));
 				return CommandResult.success();
 			}
 			

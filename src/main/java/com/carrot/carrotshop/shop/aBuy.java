@@ -21,6 +21,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.ShopsLogs;
 
@@ -35,6 +36,8 @@ public class aBuy extends Shop {
 	private Location<World> sellerChest;
 	@Setting
 	private int price;
+	
+	static private String type = "aBuy";
 
 	public aBuy() {
 	}
@@ -42,19 +45,19 @@ public class aBuy extends Shop {
 	public aBuy(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		if (!player.hasPermission("carrotshop.admin.abuy"))
-			throw new ExceptionInInitializerError("You don't have perms to build an aBuy sign");
+			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.isEmpty())
-			throw new ExceptionInInitializerError("aBuy signs require a chest");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST.replace("%type%", type));
 		Optional<TileEntity> chestOpt = locations.peek().getTileEntity();
 		if (!chestOpt.isPresent() || !(chestOpt.get() instanceof TileEntityCarrier))
-			throw new ExceptionInInitializerError("aBuy signs require a chest");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST.replace("%type%", type));
 		Inventory items = ((TileEntityCarrier) chestOpt.get()).getInventory();
 		if (items.totalItems() == 0)
-			throw new ExceptionInInitializerError("chest cannot be empty");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST_EMPTY);
 		price = getPrice(sign);
 		if (price < 0)
-			throw new ExceptionInInitializerError("bad price");
+			throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
 		sellerChest = locations.peek();
 		itemsTemplate = Inventory.builder().from(items).build(CarrotShop.getInstance());
 		for(Inventory item : items.slots()) {
@@ -63,7 +66,7 @@ public class aBuy extends Shop {
 		}
 		
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an aBuy shop:"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
 	}
@@ -90,17 +93,18 @@ public class aBuy extends Shop {
 
 	@Override
 	public void info(Player player) {
+		String[] format = Lang.SHOP_FORMAT_BUY.split("%items%");
 		Builder builder = Text.builder();
-		builder.append(Text.of("Buy"));
+		builder.append(Text.of(format[0].replace("%price%", formatPrice(price))));
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(" for ", formatPrice(price), "?"));
+		builder.append(Text.of(format[1].replace("%price%", formatPrice(price))));
 		player.sendMessage(builder.build());
 		if (!update())
-			player.sendMessage(Text.of(TextColors.GOLD, "This shop is empty!"));
+			player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_EMPTY));
 
 	}
 	@Override
@@ -108,7 +112,7 @@ public class aBuy extends Shop {
 		Optional<TileEntity> chestToGive = sellerChest.getTileEntity();
 		if (chestToGive.isPresent() && chestToGive.get() instanceof TileEntityCarrier) {
 			if (!hasEnough(((TileEntityCarrier) chestToGive.get()).getInventory(), itemsTemplate)) {
-				player.sendMessage(Text.of(TextColors.GOLD, "This shop is empty!"));
+				player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_EMPTY));
 				update();
 				return false;
 			}
@@ -118,7 +122,7 @@ public class aBuy extends Shop {
 		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 		TransactionResult accountResult = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 		if (accountResult.getResult() != ResultType.SUCCESS) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 			return false;
 		}
 		Inventory inv = player.getInventory().query(InventoryRow.class);
@@ -146,7 +150,8 @@ public class aBuy extends Shop {
 
 		ShopsLogs.log(getOwner(), player, "buy", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
-		player.sendMessage(Text.of("You bought", itemsName.build(), " for ", formatPrice(price)));
+		String recap = Lang.SHOP_RECAP_BUY.replace("%price%", formatPrice(price));
+		player.sendMessage(Text.of(recap.split("%items%")[0], itemsName.build(), recap.split("%items%")[1]));
 
 		update();
 		return true;

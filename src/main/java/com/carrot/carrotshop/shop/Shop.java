@@ -1,5 +1,6 @@
 package com.carrot.carrotshop.shop;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -28,6 +29,7 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -59,8 +61,8 @@ public abstract class Shop {
 
 	public final void done(Player player) {
 		if (canLoopCurrency(player)) {
-			player.sendMessage(Text.of(TextColors.GOLD, "This sign will use default currency: ", TextColors.YELLOW, getCurrency().getDisplayName()));
-			player.sendMessage(Text.of(TextColors.GOLD, "Left click the sign with a stick to use another currency"));
+			player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_CURRENCY.replace("%name%", getCurrency().getDisplayName().toPlain())));
+			player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_CURRENCY_LOOP));
 		}
 	}
 
@@ -164,16 +166,23 @@ public abstract class Shop {
 		currency = first;
 	}
 
-	protected final String formatPrice(int price) {
-		switch (price) {
-		case 0:
-			return "free";
-		case 1:
-			return price + " " + getCurrency().getDisplayName().toPlain();
-		default:
-			return price + " " + getCurrency().getPluralDisplayName().toPlain();
-		}
-
+	protected final String formatPrice(int value) {
+		return formatPrice(BigDecimal.valueOf(value));
+	}
+	
+	protected final String formatPrice(BigDecimal value) {
+		String str;
+		if (value == BigDecimal.ZERO)
+			str = Lang.PRICE_ZERO;
+		else if (value == BigDecimal.ONE)
+			str = Lang.PRICE_ONE;
+		else
+			str = Lang.PRICE_DEFAULT;
+		return str
+				.replace("%value%", value.toString())
+				.replace("%currencyFull%", getCurrency().getDisplayName().toPlain())
+				.replace("%currencyFullPlural%", getCurrency().getPluralDisplayName().toPlain())
+				.replace("%currencySymbol%", getCurrency().getSymbol().toPlain());
 	}
 
 	private final void setFirstLineColor(TextColor color) {
@@ -327,7 +336,7 @@ public abstract class Shop {
 					if (oldShopList.isPresent()) {
 						for (Shop oldShop : oldShopList.get()) {
 							if (!oldShop.isOwner(player)) {
-								player.sendMessage(Text.of(TextColors.DARK_RED, "This shop would override a shop you do not own. Abort."));
+								player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_OVERRIDE));
 								return false;
 							}
 						}

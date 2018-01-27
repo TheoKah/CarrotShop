@@ -189,7 +189,7 @@ public class ShopsLogs {
 			Files.write(file.toPath(), newNode.toString().getBytes(), StandardOpenOption.APPEND);
 
 		} catch (IOException e) {
-			CarrotShop.getLogger().error("Unable to store logs for shop " + shopOwner + " triggered by " + player.getName() + ": " + e.getMessage());
+			CarrotShop.getLogger().error(Lang.CONSOLE_ERROR_LOGS.replace("%owner%", shopOwner).replace("%source%", player.getName()).replace("%error%", e.getMessage()));
 		}
 	}
 
@@ -209,13 +209,13 @@ public class ShopsLogs {
 	}
 
 	public static void generateReport(CommandSource src, UUID target) {
-		src.sendMessage(Text.of(TextColors.GOLD, "The report is being prepared..."));
+		src.sendMessage(Text.of(TextColors.GOLD, Lang.REPORT_PREPARE));
 
 		Task.builder().execute(() -> {
 			Optional<String> query = ShopsLogs.getLog(target);
 
 			if (!query.isPresent()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "No data found to generate report"));
+				src.sendMessage(Text.of(TextColors.DARK_RED, Lang.REPORT_ERROR_DATA));
 				return;
 			}
 
@@ -249,13 +249,15 @@ public class ShopsLogs {
 
 				String reportURL = "http://carrotshop.xyz/" + jobject.get("name").getAsString() + ".htm";
 
-				src.sendMessage(Text.of(TextColors.GOLD, "Report is ready: ", Text.builder(reportURL)
+				src.sendMessage(Text.of(TextColors.GOLD, Lang.REPORT_READY.split("%url%")[0],
+						Text.builder(reportURL)
 						.color(TextColors.DARK_AQUA)
-						.onClick(TextActions.openUrl(new URL(reportURL))).build()));
+						.onClick(TextActions.openUrl(new URL(reportURL))).build(),
+						TextColors.GOLD, Lang.REPORT_READY.split("%url%")[1]));
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				CarrotShop.getLogger().error("ERROR: " + e.getMessage());
+				CarrotShop.getLogger().error(Lang.CONSOLE_ERROR_GENERIC.replace("%error%", e.getMessage()));
 				if (connection != null)
 					try {
 						CarrotShop.getLogger().error(connection.getResponseMessage());

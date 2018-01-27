@@ -13,6 +13,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -21,6 +22,8 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 public class Heal extends Shop {
 	@Setting
 	private int price;
+	
+	static private String type = "Heal";
 
 	public Heal() {
 	}
@@ -28,23 +31,23 @@ public class Heal extends Shop {
 	public Heal(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		if (!player.hasPermission("carrotshop.admin.heal"))
-			throw new ExceptionInInitializerError("You don't have perms to build a heal sign");
+			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 
 		if (CarrotShop.getEcoService() != null) {
 			price = getPrice(sign);
 			if (price < 0)
-				throw new ExceptionInInitializerError("bad price");
+				throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
 		}
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup a heal sign"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 	}
 
 	@Override
 	public void info(Player player) {
 		if (CarrotShop.getEcoService() != null)
-			player.sendMessage(Text.of("Heal for ", formatPrice(price), "?"));
+			player.sendMessage(Text.of(Lang.SHOP_HEAL_HELP.replace("%price%", formatPrice(price))));
 		else
-			player.sendMessage(Text.of("Heal?"));
+			player.sendMessage(Text.of(Lang.SHOP_HEAL_HELP_NOECON));
 		update();
 
 	}
@@ -55,13 +58,13 @@ public class Heal extends Shop {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 			if (result.getResult() != ResultType.SUCCESS) {
-				player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+				player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 				return false;
 			}
-			player.sendMessage(Text.of("You healed for ", formatPrice(price)));
+			player.sendMessage(Text.of(Lang.SHOP_HEAL.replace("%price%", formatPrice(price))));
 		}
 		else
-			player.sendMessage(Text.of("You healed"));
+			player.sendMessage(Text.of(Lang.SHOP_HEAL_NOECON));
 
 		player.offer(Keys.HEALTH, player.get(Keys.MAX_HEALTH).get());
 
