@@ -114,19 +114,19 @@ public class Trade extends Shop {
 	@Override
 	public void info(Player player) {
 		Builder builder = Text.builder();
-		builder.append(Text.of("Trade"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(" and get"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of("?"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 2)));
 		player.sendMessage(builder.build());
 		if (!update())
 			player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_SCHRODINGER));
@@ -169,6 +169,7 @@ public class Trade extends Shop {
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
 		Builder itemsName = Text.builder();
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
@@ -183,9 +184,7 @@ public class Trade extends Shop {
 				}
 			}
 		}
-
-		itemsName.append(Text.of(" for"));
-
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
@@ -202,16 +201,17 @@ public class Trade extends Shop {
 				}
 			}
 		}
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 2)));
 
 		ShopsLogs.log(getOwner(), player, "trade", super.getLocation(), Optional.empty(), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
 
-		player.sendMessage(Text.of(Lang.SHOP_RECAP_TRADE.split("%items%")[0], itemsName.build(), Lang.SHOP_RECAP_TRADE.split("%items%")[1]));
+		player.sendMessage(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 0), itemsName.build(), Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 1)));
 
 		if (!CarrotShop.noSpam(getOwner())) {
 			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
 			if (seller.isPresent()) {
 				String recap = Lang.SHOP_RECAP_OTRADE.replace("%player%", player.getName());
-				seller.get().sendMessage(Text.of(recap.split("%formateditems%")[0], itemsName.build(), recap.split("%formateditems%")[1]));
+				seller.get().sendMessage(Text.of(Lang.split(recap, "%formateditems%", 0), itemsName.build(), Lang.split(recap, "%formateditems%", 1)));
 
 			}
 		}

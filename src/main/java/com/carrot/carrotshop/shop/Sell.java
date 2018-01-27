@@ -95,15 +95,14 @@ public class Sell extends Shop {
 
 	@Override
 	public void info(Player player) {
-		String[] format = Lang.SHOP_FORMAT_SELL.split("%items%");
 		Builder builder = Text.builder();
-		builder.append(Text.of(format[0].replace("%price%", formatPrice(price))));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_SELL, "%items%", 0).replace("%price%", formatPrice(price))));
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(format[1].replace("%price%", formatPrice(price))));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_SELL, "%items%", 1).replace("%price%", formatPrice(price))));
 		player.sendMessage(builder.build());
 		if (!update())
 			player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_FULL));
@@ -161,13 +160,13 @@ public class Sell extends Shop {
 		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
 		String recap = Lang.SHOP_RECAP_SELL.replace("%price%", formatPrice(price));
-		player.sendMessage(Text.of(recap.split("%items%")[0], itemsName.build(), recap.split("%items%")[1]));
+		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
 
 		if (!CarrotShop.noSpam(getOwner())) {
 			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
 			if (seller.isPresent()) {
 				recap = Lang.SHOP_RECAP_OSELL.replace("%player%", player.getName()).replace("%price%", formatPrice(price));
-				seller.get().sendMessage(Text.of(recap.split("%items%")[0], itemsName.build(), recap.split("%items%")[1]));
+				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
 
 			}
 		}

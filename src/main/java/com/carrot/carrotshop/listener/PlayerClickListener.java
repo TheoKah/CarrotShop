@@ -109,7 +109,7 @@ public class PlayerClickListener {
 					if (shop.canLoopCurrency(player)) {
 						shop.loopCurrency();
 						if (shop.hasCurrency())
-							player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.CURRENCY_VALUE.split("%url%")[0], TextColors.YELLOW, shop.getCurrency().getDisplayName(), TextColors.DARK_GREEN, Lang.CURRENCY_VALUE.split("%url%")[1]));
+							player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.split(Lang.CURRENCY_VALUE, "%url%", 0), TextColors.YELLOW, shop.getCurrency().getDisplayName(), TextColors.DARK_GREEN, Lang.split(Lang.CURRENCY_VALUE, "%url%", 1)));
 						else
 							player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.CURRENCY_SERVER));							
 					}

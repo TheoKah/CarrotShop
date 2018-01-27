@@ -249,11 +249,11 @@ public class ShopsLogs {
 
 				String reportURL = "http://carrotshop.xyz/" + jobject.get("name").getAsString() + ".htm";
 
-				src.sendMessage(Text.of(TextColors.GOLD, Lang.REPORT_READY.split("%url%")[0],
+				src.sendMessage(Text.of(TextColors.GOLD, Lang.split(Lang.REPORT_READY, "%url%", 0),
 						Text.builder(reportURL)
 						.color(TextColors.DARK_AQUA)
 						.onClick(TextActions.openUrl(new URL(reportURL))).build(),
-						TextColors.GOLD, Lang.REPORT_READY.split("%url%")[1]));
+						TextColors.GOLD, Lang.split(Lang.REPORT_READY, "%url%", 1)));
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

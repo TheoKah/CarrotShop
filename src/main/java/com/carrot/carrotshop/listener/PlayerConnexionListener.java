@@ -16,11 +16,11 @@ public class PlayerConnexionListener {
 	public void onPlayerJoin(ClientConnectionEvent.Join event)
 	{
 		if (ShopsData.hasSoldSomethingOffline(event.getTargetEntity().getUniqueId()) && event.getTargetEntity().hasPermission("carrotshop.report.self")) {
-			event.getTargetEntity().sendMessage(Text.of(TextColors.YELLOW, Lang.SHOP_USED.split("%cmd%")[0],
+			event.getTargetEntity().sendMessage(Text.of(TextColors.YELLOW, Lang.split(Lang.SHOP_USED, "%cmd%", 0),
 					Text.builder("/carrotreport")
 					.color(TextColors.DARK_AQUA)
 					.onClick(TextActions.runCommand("/carrotreport")).build(),
-					TextColors.YELLOW, Lang.SHOP_USED.split("%cmd%")[1]));
+					TextColors.YELLOW, Lang.split(Lang.SHOP_USED, "%cmd%", 1)));
 		}
 	}
 }

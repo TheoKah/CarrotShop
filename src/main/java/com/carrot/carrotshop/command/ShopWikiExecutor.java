@@ -21,15 +21,15 @@ public class ShopWikiExecutor implements CommandExecutor{
 		String wikiURL = "https://github.com/TheoKah/CarrotShop/wiki/User-Guide";
 
 		try {
-			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.WIKI_LINK.split("%url%")[0],
+			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 0),
 					Text.builder(wikiURL)
 					.color(TextColors.DARK_AQUA)
 					.onClick(TextActions.openUrl(new URL(wikiURL))).build(),
-					TextColors.DARK_PURPLE, Lang.WIKI_LINK.split("%url%")[1]));
+					TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 1)));
 		} catch (MalformedURLException e) {
-			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.WIKI_LINK.split("%url%")[0],
+			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 0),
 					TextColors.DARK_AQUA, wikiURL,
-					TextColors.DARK_PURPLE, Lang.WIKI_LINK.split("%url%")[1]));
+					TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 1)));
 		}
 		return CommandResult.success();
 	}

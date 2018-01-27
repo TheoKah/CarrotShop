@@ -173,4 +173,11 @@ public class Lang
 			CarrotShop.getLogger().error("Could not save lang file !");
 		}
 	}
+	
+	public static String split(String str, String separator, int pos) {
+		String[] strs = str.split(separator);
+		if (strs.length > pos)
+			return strs[pos];
+		return "";
+	}
 }

@@ -112,21 +112,20 @@ public class aTrade extends Shop {
 
 	@Override
 	public void info(Player player) {
-		String[] format = Lang.SHOP_FORMAT_TRADE.split("%items%");
 		Builder builder = Text.builder();
-		builder.append(Text.of(format[0]));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(format[1]));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(format[2]));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 2)));
 		player.sendMessage(builder.build());
 		if (!update())
 			player.sendMessage(Text.of(TextColors.GOLD, Lang.SHOP_SCHRODINGER));
@@ -168,9 +167,8 @@ public class aTrade extends Shop {
 		Inventory invToTake = ((TileEntityCarrier) chestToTake.get()).getInventory();
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
-		String[] format = Lang.SHOP_RECAP_TRADE_FORMAT.split("%items%");
 		Builder itemsName = Text.builder();
-		itemsName.append(Text.of(format[0]));
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
@@ -185,7 +183,7 @@ public class aTrade extends Shop {
 				}
 			}
 		}
-		itemsName.append(Text.of(format[1]));
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
@@ -202,11 +200,11 @@ public class aTrade extends Shop {
 				}
 			}
 		}
-		itemsName.append(Text.of(format[2]));
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 2)));
 
 		ShopsLogs.log(getOwner(), player, "trade", super.getLocation(), Optional.empty(), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
 
-		player.sendMessage(Text.of(Lang.SHOP_RECAP_TRADE.split("%formateditems%")[0], itemsName.build(), Lang.SHOP_RECAP_TRADE.split("%formateditems%")[1]));
+		player.sendMessage(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 0), itemsName.build(), Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 1)));
 
 		update();
 		return true;
