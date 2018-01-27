@@ -72,10 +72,10 @@ public class Lang
 	public static String SHOP_MONEY = "You don't have enough money!";
 	public static String SHOP_OMONEY = "Shop owner don't have enough money!";
 	public static String SHOP_ERROR_MONEY = "Unable to give you the money!";
-	public static String SHOP_RECAP_BUY = "You bought %items% for %price%";
-	public static String SHOP_RECAP_OBUY = "%player% bought %items% for %price% from you";
-	public static String SHOP_RECAP_SELL = "You sold %items% for %price%";
-	public static String SHOP_RECAP_OSELL = "%player% sold %items% for %price% to you";
+	public static String SHOP_RECAP_BUY = "You bought%items% for %price%";
+	public static String SHOP_RECAP_OBUY = "%player% bought%items% for %price% from you";
+	public static String SHOP_RECAP_SELL = "You sold%items% for %price%";
+	public static String SHOP_RECAP_OSELL = "%player% sold%items% for %price% to you";
 	public static String SHOP_RECAP_TRADE = "You traded %formateditems%";
 	public static String SHOP_RECAP_OTRADE = "%player% traded %formateditems%";
 	public static String SHOP_RECAP_TRADE_FORMAT = "%items% for%items%";
