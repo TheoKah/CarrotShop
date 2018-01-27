@@ -93,7 +93,6 @@ public abstract class Shop {
 	}
 
 	protected final void setOwner(Player player) {
-		player.sendMessage(Text.of("set as owner"));
 		owner = player.getUniqueId();
 	}
 
