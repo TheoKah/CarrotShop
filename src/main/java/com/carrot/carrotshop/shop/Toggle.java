@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -92,14 +93,14 @@ public class Toggle extends Shop {
 			player.sendMessage(Text.of(Lang.SHOP_TOGGLE_NOECON));
 		}
 
-		//lever.offer(Keys.POWERED, true, CarrotShop.getCause());
+		lever.offer(Keys.POWERED, true);
 
 		Sponge.getScheduler().createTaskBuilder().execute(new Consumer<Task>() {
 
 			@Override
 			public void accept(Task t) {
 				t.cancel();
-				//lever.offer(Keys.POWERED, false, CarrotShop.getCause());
+				lever.offer(Keys.POWERED, false);
 			}
 		}).delay(2, TimeUnit.SECONDS).submit(CarrotShop.getInstance());
 

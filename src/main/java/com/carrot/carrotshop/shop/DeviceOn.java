@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
@@ -89,9 +90,7 @@ public class DeviceOn extends Shop {
 			player.sendMessage(Text.of(Lang.SHOP_DEVICEON_NOECON));
 		}
 
-		//lever.offer(Keys.POWERED, true, CarrotShop.getCause());
-
-
+		lever.offer(Keys.POWERED, true);
 
 		return true;
 	}
