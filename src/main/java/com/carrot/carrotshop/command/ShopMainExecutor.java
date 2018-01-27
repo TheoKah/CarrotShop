@@ -21,7 +21,7 @@ public class ShopMainExecutor implements CommandExecutor{
 		List<Text> contents = new ArrayList<>();
 
 		contents.add(Text.of(TextColors.GOLD, "/cs help", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_WIKI));
-		contents.add(Text.of(TextColors.GOLD, "/cs hide", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.CMD_SPAM));
+		contents.add(Text.of(TextColors.GOLD, "/cs hide", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_SPAM));
 		contents.add(Text.of(TextColors.GOLD, "/cs report", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_REPORT));
 		contents.add(Text.of(TextColors.GOLD, "/cs servreport", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_SREPORT));
 		contents.add(Text.of(TextColors.GOLD, "/cs report [player]", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_OREPORT));
