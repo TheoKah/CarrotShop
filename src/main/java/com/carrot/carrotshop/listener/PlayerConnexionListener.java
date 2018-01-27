@@ -7,6 +7,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 
 public class PlayerConnexionListener {
@@ -15,11 +16,11 @@ public class PlayerConnexionListener {
 	public void onPlayerJoin(ClientConnectionEvent.Join event)
 	{
 		if (ShopsData.hasSoldSomethingOffline(event.getTargetEntity().getUniqueId()) && event.getTargetEntity().hasPermission("carrotshop.report.self")) {
-			event.getTargetEntity().sendMessage(Text.of(TextColors.YELLOW, "Someone used your shop signs while you were away. Use ",
+			event.getTargetEntity().sendMessage(Text.of(TextColors.YELLOW, Lang.split(Lang.SHOP_USED, "%cmd%", 0),
 					Text.builder("/carrotreport")
 					.color(TextColors.DARK_AQUA)
 					.onClick(TextActions.runCommand("/carrotreport")).build(),
-					TextColors.YELLOW, " for more details" ));
+					TextColors.YELLOW, Lang.split(Lang.SHOP_USED, "%cmd%", 1)));
 		}
 	}
 }

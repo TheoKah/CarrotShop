@@ -10,21 +10,18 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 
 public class NoSpamExecutor implements CommandExecutor{
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!(src instanceof Player)) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Need to be a player"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, Lang.CONSOLE_ERROR_PLAYER));
 			return CommandResult.success();
 		}
 
-		if (CarrotShop.toggleSpam(((Player) src).getUniqueId()))
-			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop use report: OFF"));
-		else
-			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Shop use report: ON"));
-
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.CMD_SPAM.replace("%status%", CarrotShop.toggleSpam(((Player) src).getUniqueId()) ? Lang.STATUS_OFF : Lang.STATUS_ON)));
 		return CommandResult.success();
 	}
 

@@ -12,6 +12,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
+import com.carrot.carrotshop.Lang;
+
 public class ShopWikiExecutor implements CommandExecutor{
 
 	@Override
@@ -19,11 +21,15 @@ public class ShopWikiExecutor implements CommandExecutor{
 		String wikiURL = "https://github.com/TheoKah/CarrotShop/wiki/User-Guide";
 
 		try {
-			src.sendMessage(Text.of(TextColors.DARK_PURPLE, "Link to the wiki: ", Text.builder(wikiURL)
+			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 0),
+					Text.builder(wikiURL)
 					.color(TextColors.DARK_AQUA)
-					.onClick(TextActions.openUrl(new URL(wikiURL))).build()));
+					.onClick(TextActions.openUrl(new URL(wikiURL))).build(),
+					TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 1)));
 		} catch (MalformedURLException e) {
-			src.sendMessage(Text.of(TextColors.DARK_PURPLE, "Link to the wiki: ", TextColors.DARK_AQUA, wikiURL));
+			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 0),
+					TextColors.DARK_AQUA, wikiURL,
+					TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 1)));
 		}
 		return CommandResult.success();
 	}

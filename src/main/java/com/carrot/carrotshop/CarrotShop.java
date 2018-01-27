@@ -23,6 +23,7 @@ import org.spongepowered.api.text.Text;
 import com.carrot.carrotshop.command.NoSpamExecutor;
 import com.carrot.carrotshop.command.ShopConfigCurrencyExecutor;
 import com.carrot.carrotshop.command.ShopConfigExecutor;
+import com.carrot.carrotshop.command.ShopConfigReloadExecutor;
 import com.carrot.carrotshop.command.ShopMainExecutor;
 import com.carrot.carrotshop.command.ShopReportExecutor;
 import com.carrot.carrotshop.command.ShopServerReportExecutor;
@@ -57,6 +58,7 @@ public class CarrotShop {
 
 		rootDir = new File(defaultConfigDir, "carrotshop");
 
+		Lang.init(rootDir);
 		ShopsLogs.init(rootDir);
 		ShopsData.init(rootDir);
 	}
@@ -67,45 +69,52 @@ public class CarrotShop {
 		Sponge.getServiceManager()
 		.getRegistration(EconomyService.class)
 		.ifPresent(prov -> economyService = prov.getProvider());
-		
+
 		ShopsData.load();
 
 		CommandSpec shopReport = CommandSpec.builder()
-				.description(Text.of("Generare a CarrotShop report"))
+				.description(Text.of(Lang.HELP_DESC_CMD_REPORT))
 				.executor(new ShopReportExecutor())
 				.arguments(GenericArguments.optional(GenericArguments.user(Text.of("player"))))
 				.build();
 		
 		CommandSpec shopServerReport = CommandSpec.builder()
-				.description(Text.of("Generare a CarrotShop report for iSigns"))
+				.description(Text.of(Lang.HELP_DESC_CMD_SREPORT))
 				.executor(new ShopServerReportExecutor())
 				.build();
 		
 		CommandSpec shopSpam = CommandSpec.builder()
-				.description(Text.of("Toggle shop message when someone use your shop"))
+				.description(Text.of(Lang.HELP_DESC_CMD_SPAM))
 				.executor(new NoSpamExecutor())
 				.build();
 		
 		CommandSpec shopWiki = CommandSpec.builder()
-				.description(Text.of("Displays a link to the shop wiki"))
+				.description(Text.of(Lang.HELP_DESC_CMD_WIKI))
 				.executor(new ShopWikiExecutor())
 				.build();
 		
 		CommandSpec shopConfigCurrency = CommandSpec.builder()
-				.description(Text.of("Get/Set the default currency"))
+				.description(Text.of(Lang.HELP_DESC_CMD_CONFIG_CURRENCY))
 				.permission("carrotshop.config.currency")
 				.executor(new ShopConfigCurrencyExecutor())
 				.arguments(GenericArguments.optional(new CurrencyElement(Text.of("currency"))))
 				.build();
 		
+		CommandSpec shopConfigReload = CommandSpec.builder()
+				.description(Text.of(Lang.HELP_DESC_CMD_CONFIG_RELOAD))
+				.permission("carrotshop.config.reload")
+				.executor(new ShopConfigReloadExecutor())
+				.build();
+		
 		CommandSpec shopConfig = CommandSpec.builder()
-				.description(Text.of("Change config of the plugin"))
+				.description(Text.of(Lang.HELP_DESC_CMD_CONFIG))
 				.executor(new ShopConfigExecutor())
 				.child(shopConfigCurrency, "currency")
+				.child(shopConfigReload, "reload")
 				.build();
 		
 		CommandSpec shopMain = CommandSpec.builder()
-				.description(Text.of("Main CarrotShop command"))
+				.description(Text.of(Lang.HELP_DESC_CMD_MAIN))
 				.executor(new ShopMainExecutor())
 				.child(shopWiki, "help", "?", "wiki", "how", "howto", "h")
 				.child(shopSpam, "hide", "shopchat", "stop", "off", "nospam", "spam", "toggle", "togglechat", "t")
@@ -114,7 +123,7 @@ public class CarrotShop {
 				.child(shopConfig, "config")
 				.build();
 
-		Sponge.getCommandManager().register(plugin, shopReport, "shopreport", "carrotshopreport", "cr", "sr");
+		Sponge.getCommandManager().register(plugin, shopReport, "shopreport", "carrotshopreport", "cr", "sr", "carrotreport");
 		Sponge.getCommandManager().register(plugin, shopServerReport, "serverreport", "carrotshopserverreport", "shopserverreport", "carrotserverreport", "csr", "ssr", "csreport", "ssreport");
 		Sponge.getCommandManager().register(plugin, shopSpam, "shophide", "hideshopchat", "carrotshophide", "carrothide", "shide", "chide", "sh", "ch");
 		Sponge.getCommandManager().register(plugin, shopWiki, "shophelp", "carrotshopwiki", "shophelp", "carrotshopwiki", "cshophelp", "cshopwiki", "carrothelp", "carrotwiki", "shelp", "swiki");

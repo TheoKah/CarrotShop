@@ -50,17 +50,18 @@ public class BlockBreakListener {
 					Optional<List<Shop>> shops = ShopsData.getShops(loc.get());
 					if (shops.isPresent()) {
 						Optional<Player> cause = event.getCause().first(Player.class);
-						if (!cause.isPresent()) {
+						if (cause.isPresent()) {
+							List<Shop> toDelete = new ArrayList<>();
+							shops.get().forEach((shop) -> {
+								toDelete.add(shop);
+							});
+							toDelete.forEach((shop) -> {
+								if (!shop.destroy(cause.get()))
+									event.setCancelled(true);
+							});
+						} else {
 							event.setCancelled(true);
 						}
-						List<Shop> toDelete = new ArrayList<>();
-						shops.get().forEach((shop) -> {
-							toDelete.add(shop);
-						});
-						toDelete.forEach((shop) -> {
-							if (!shop.destroy(cause.get()))
-								event.setCancelled(true);
-						});
 					} else if (isSignAndShop(loc.get(), Direction.UP, false) ||
 							isSignAndShop(loc.get(), Direction.NORTH, true) ||
 							isSignAndShop(loc.get(), Direction.SOUTH, true) ||

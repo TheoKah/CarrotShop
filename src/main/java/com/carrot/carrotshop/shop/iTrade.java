@@ -16,6 +16,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.ShopsLogs;
 
@@ -28,6 +29,8 @@ public class iTrade extends Shop {
 	private Inventory toGive;
 	@Setting
 	private Inventory toTake;
+	
+	static private String type = "iTrade";
 
 	public iTrade() {
 	}
@@ -35,18 +38,18 @@ public class iTrade extends Shop {
 	public iTrade(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		if (!player.hasPermission("carrotshop.admin.itrade"))
-			throw new ExceptionInInitializerError("You don't have perms to build an iTrade sign");
+			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.size() < 2)
-			throw new ExceptionInInitializerError("iTrade signs require you setup two chests");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST2.replace("%type%", type));
 		Optional<TileEntity> chestTakeOpt = locations.get(0).getTileEntity();
 		Optional<TileEntity> chestGiveOpt = locations.get(1).getTileEntity();
 		if (!chestTakeOpt.isPresent() || ! chestGiveOpt.isPresent() || !(chestTakeOpt.get() instanceof TileEntityCarrier) || !(chestGiveOpt.get() instanceof TileEntityCarrier))
-			throw new ExceptionInInitializerError("iTrade signs require you setup two chests");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST2.replace("%type%", type));
 		Inventory chestTake = ((TileEntityCarrier) chestTakeOpt.get()).getInventory();
 		Inventory chestGive = ((TileEntityCarrier) chestGiveOpt.get()).getInventory();
 		if (chestTake.totalItems() == 0 || chestGive.totalItems() == 0)
-			throw new ExceptionInInitializerError("chest cannot be empty");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST_EMPTY);
 		toTake = Inventory.builder().from(chestTake).build(CarrotShop.getInstance());
 		toGive = Inventory.builder().from(chestGive).build(CarrotShop.getInstance());
 		for(Inventory item : chestGive.slots()) {
@@ -58,7 +61,7 @@ public class iTrade extends Shop {
 				toTake.offer(item.peek().get());
 		}
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iTrade shop:"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
 	}
@@ -66,19 +69,19 @@ public class iTrade extends Shop {
 	@Override
 	public void info(Player player) {
 		Builder builder = Text.builder();
-		builder.append(Text.of("Trade"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(" and get"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of("?"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 2)));
 		player.sendMessage(builder.build());
 		update();
 
@@ -89,11 +92,12 @@ public class iTrade extends Shop {
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 		
 		if (!hasEnough(inv, toTake)) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You are missing items for the trade!"));
+			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_ITEMS));
 			return false;
 		}
 		
 		Builder itemsName = Text.builder();
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
@@ -103,7 +107,7 @@ public class iTrade extends Shop {
 				}
 			}
 		}
-		itemsName.append(Text.of(" for"));
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
@@ -112,10 +116,11 @@ public class iTrade extends Shop {
 				});
 			}
 		}
+		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 2)));
 		
 		ShopsLogs.log(getOwner(), player, "trade", super.getLocation(), Optional.empty(), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
 
-		player.sendMessage(Text.of("You traded", itemsName.build()));
+		player.sendMessage(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 0), itemsName.build(), Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 1)));
 
 		return true;
 	}

@@ -12,21 +12,23 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import com.carrot.carrotshop.Lang;
+
 public class ShopMainExecutor implements CommandExecutor{
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> contents = new ArrayList<>();
 
-		contents.add(Text.of(TextColors.GOLD, "/cs help", TextColors.GRAY, " - ", TextColors.YELLOW, "Print a link to the wiki"));
-		contents.add(Text.of(TextColors.GOLD, "/cs hide", TextColors.GRAY, " - ", TextColors.YELLOW, "Hide sign usage from chat"));
-		contents.add(Text.of(TextColors.GOLD, "/cs report", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a personal shop report"));
-		contents.add(Text.of(TextColors.GOLD, "/cs servreport", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a server shop report"));
-		contents.add(Text.of(TextColors.GOLD, "/cs report [player]", TextColors.GRAY, " - ", TextColors.YELLOW, "Generate a shop report for another player"));
-		contents.add(Text.of(TextColors.GOLD, "/cs config", TextColors.GRAY, " - ", TextColors.YELLOW, "Change config of the plugin"));
+		contents.add(Text.of(TextColors.GOLD, "/cs help", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_WIKI));
+		contents.add(Text.of(TextColors.GOLD, "/cs hide", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_SPAM));
+		contents.add(Text.of(TextColors.GOLD, "/cs report", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_REPORT));
+		contents.add(Text.of(TextColors.GOLD, "/cs servreport", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_SREPORT));
+		contents.add(Text.of(TextColors.GOLD, "/cs report [player]", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_OREPORT));
+		contents.add(Text.of(TextColors.GOLD, "/cs config", TextColors.GRAY, " - ", TextColors.YELLOW, Lang.HELP_DESC_CMD_CONFIG));
 
 		PaginationList.builder()
-		.title(Text.of(TextColors.GOLD, "{ ", TextColors.YELLOW, "/carrotshop", TextColors.GOLD, " }"))
+		.title(Text.of(TextColors.GOLD, "{ ", TextColors.YELLOW, Lang.HELP_HEADER_CMD_MAIN, TextColors.GOLD, " }"))
 		.contents(contents)
 		.padding(Text.of("-"))
 		.sendTo(src);

@@ -19,6 +19,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.ShopsLogs;
 
@@ -32,25 +33,27 @@ public class iBuy extends Shop {
 	@Setting
 	private int price;
 
+	static private String type = "iBuy";
+	
 	public iBuy() {
 	}
 
 	public iBuy(Player player, Location<World> sign) throws ExceptionInInitializerError {
 		super(sign);
 		if (!player.hasPermission("carrotshop.admin.ibuy"))
-			throw new ExceptionInInitializerError("You don't have perms to build an iTrade sign");
+			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 		Stack<Location<World>> locations = ShopsData.getItemLocations(player);
 		if (locations.isEmpty())
-			throw new ExceptionInInitializerError("Buy signs require a chest");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST.replace("%type%", type));
 		Optional<TileEntity> chestOpt = locations.peek().getTileEntity();
 		if (!chestOpt.isPresent() || !(chestOpt.get() instanceof TileEntityCarrier))
-			throw new ExceptionInInitializerError("Buy signs require a chest");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST.replace("%type%", type));
 		Inventory items = ((TileEntityCarrier) chestOpt.get()).getInventory();
 		if (items.totalItems() == 0)
-			throw new ExceptionInInitializerError("chest cannot be empty");
+			throw new ExceptionInInitializerError(Lang.SHOP_CHEST_EMPTY);
 		price = getPrice(sign);
 		if (price < 0)
-			throw new ExceptionInInitializerError("bad price");
+			throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
 		itemsTemplate = Inventory.builder().from(items).build(CarrotShop.getInstance());
 		for(Inventory item : items.slots()) {
 			if (item.peek().isPresent())
@@ -58,7 +61,7 @@ public class iBuy extends Shop {
 		}
 
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, "You have setup an iBuy shop:"));
+		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
 	}
@@ -66,13 +69,13 @@ public class iBuy extends Shop {
 	@Override
 	public void info(Player player) {
 		Builder builder = Text.builder();
-		builder.append(Text.of("Buy"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_BUY, "%items%", 0).replace("%price%", formatPrice(price))));
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 			}
 		}
-		builder.append(Text.of(" for ", formatPrice(price), "?"));
+		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_BUY, "%items%", 1).replace("%price%", formatPrice(price))));
 		player.sendMessage(builder.build());
 		update();
 	}
@@ -81,7 +84,7 @@ public class iBuy extends Shop {
 		UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 		TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
 		if (result.getResult() != ResultType.SUCCESS) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You don't have enough money!"));
+			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 			return false;
 		}
 		Inventory inv = player.getInventory().query(InventoryRow.class);
@@ -98,7 +101,8 @@ public class iBuy extends Shop {
 
 		ShopsLogs.log(getOwner(), player, "buy", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 		
-		player.sendMessage(Text.of("You bought", itemsName.build(), " for ", formatPrice(price)));
+		String recap = Lang.SHOP_RECAP_BUY.replace("%price%", formatPrice(price));
+		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
 
 		return true;
 	}
