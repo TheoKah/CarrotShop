@@ -153,6 +153,12 @@ public class ShopsData {
 							shopNode.getNode("shop").setValue(TypeToken.of(DeviceOff.class), (DeviceOff) shop);
 						else if (shop instanceof Toggle)
 							shopNode.getNode("shop").setValue(TypeToken.of(Toggle.class), (Toggle) shop);
+						else if (shop instanceof aDeviceOn)
+							shopNode.getNode("shop").setValue(TypeToken.of(aDeviceOn.class), (aDeviceOn) shop);
+						else if (shop instanceof aDeviceOff)
+							shopNode.getNode("shop").setValue(TypeToken.of(aDeviceOff.class), (aDeviceOff) shop);
+						else if (shop instanceof aToggle)
+							shopNode.getNode("shop").setValue(TypeToken.of(aToggle.class), (aToggle) shop);
 						else
 							continue;
 						shopNode.getNode("type").setValue(shop.getClass().getName());

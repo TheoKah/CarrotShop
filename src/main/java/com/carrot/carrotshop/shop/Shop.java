@@ -320,6 +320,15 @@ public abstract class Shop {
 					case "[toggle]":
 						shop = new Toggle(player, target);
 						break;
+					case "[adeviceon]":
+						shop = new aDeviceOn(player, target);
+						break;
+					case "[adeviceoff]":
+						shop = new aDeviceOff(player, target);
+						break;
+					case "[atoggle]":
+						shop = new aToggle(player, target);
+						break;
 					default:
 						return false;
 					}
