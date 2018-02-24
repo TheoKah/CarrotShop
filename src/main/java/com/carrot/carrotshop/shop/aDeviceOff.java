@@ -90,7 +90,7 @@ public class aDeviceOff extends Shop {
 			player.sendMessage(Text.of(Lang.SHOP_DEVICEOFF_NOECON));
 		}
 
-		lever.offer(Keys.POWERED, false, CarrotShop.getCause());
+		lever.offer(Keys.POWERED, false);
 
 		return true;
 	}
