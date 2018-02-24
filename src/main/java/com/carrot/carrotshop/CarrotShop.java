@@ -123,7 +123,7 @@ public class CarrotShop {
 				.child(shopConfig, "config")
 				.build();
 
-		Sponge.getCommandManager().register(plugin, shopReport, "shopreport", "carrotshopreport", "cr", "sr", "carrotreport");
+		Sponge.getCommandManager().register(plugin, shopReport, "shopreport", "carrotshopreport", "cr", "sr", "carrotreport", "creport", "sreport");
 		Sponge.getCommandManager().register(plugin, shopServerReport, "serverreport", "carrotshopserverreport", "shopserverreport", "carrotserverreport", "csr", "ssr", "csreport", "ssreport");
 		Sponge.getCommandManager().register(plugin, shopSpam, "shophide", "hideshopchat", "carrotshophide", "carrothide", "shide", "chide", "sh", "ch");
 		Sponge.getCommandManager().register(plugin, shopWiki, "shophelp", "carrotshopwiki", "shophelp", "carrotshopwiki", "cshophelp", "cshopwiki", "carrothelp", "carrotwiki", "shelp", "swiki");

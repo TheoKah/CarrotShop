@@ -49,6 +49,7 @@ public class Lang
 	public static String SHOP_OVERRIDE = "This shop would override a shop you do not own. Abort.";
 
 	public static String WIKI_LINK = "Link to the wiki: %url%";
+	public static String WIKI_URL = "https://github.com/TheoKah/CarrotShop/wiki/User-Guide";
 	
 	public static String CMD_SPAM = "Shop use report: %status%";
 	public static String CMD_CONFIG_RELOAD = "Config reloaded";
@@ -97,6 +98,8 @@ public class Lang
 	public static String SHOP_TOGGLE_HELP_NOECON = "Toggle?";
 	public static String SHOP_TOGGLE = "Device toggled for 2 seconds for %price%";
 	public static String SHOP_TOGGLE_NOECON = "Device toggled for 2 seconds";
+	public static String SHOP_DEVICE_OTHER = "%player% used your [%type%] sign for %price%";
+	public static String SHOP_DEVICE_OTHER_NOECON = "%player% used your [%type%] sign";
 	
 	public static String CONSOLE_ERROR_PLAYER = "Need to be a player";
 	public static String CONSOLE_ERROR_LOAD = "Errors occured while loading CarrotShops";

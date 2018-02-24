@@ -264,43 +264,49 @@ public abstract class Shop {
 				SignData signData = data.get();
 				Shop shop;
 				try {
-					boolean needEconomy = false;
 					switch (signData.lines().get(0).toPlain().toLowerCase()) {
 					case "[itrade]":
 						shop = new iTrade(player, target);
 						break;
 					case "[ibuy]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new iBuy(player, target);
 						break;
 					case "[isell]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new iSell(player, target);
 						break;
 					case "[atrade]":
 						shop = new aTrade(player, target);
 						break;
 					case "[abuy]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new aBuy(player, target);
 						break;
 					case "[asell]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new aSell(player, target);
 						break;
 					case "[trade]":
 						shop = new Trade(player, target);
 						break;
 					case "[buy]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new Buy(player, target);
 						break;
 					case "[sell]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new Sell(player, target);
 						break;
 					case "[bank]":
-						needEconomy = true;
+						if (CarrotShop.getEcoService() == null)
+							return false;
 						shop = new Bank(player, target);
 						break;
 					case "[heal]":
@@ -315,10 +321,16 @@ public abstract class Shop {
 					case "[toggle]":
 						shop = new Toggle(player, target);
 						break;
+					case "[adeviceon]":
+						shop = new aDeviceOn(player, target);
+						break;
+					case "[adeviceoff]":
+						shop = new aDeviceOff(player, target);
+						break;
+					case "[atoggle]":
+						shop = new aToggle(player, target);
+						break;
 					default:
-						return false;
-					}
-					if (needEconomy && CarrotShop.getEcoService() == null) {
 						return false;
 					}
 				} catch (ExceptionInInitializerError e) {
