@@ -18,7 +18,7 @@ public class ShopWikiExecutor implements CommandExecutor{
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		String wikiURL = "https://github.com/TheoKah/CarrotShop/wiki/User-Guide";
+		String wikiURL = Lang.WIKI_URL;
 
 		try {
 			src.sendMessage(Text.of(TextColors.DARK_PURPLE, Lang.split(Lang.WIKI_LINK, "%url%", 0),

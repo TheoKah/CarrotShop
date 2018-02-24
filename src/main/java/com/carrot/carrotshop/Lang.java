@@ -49,6 +49,7 @@ public class Lang
 	public static String SHOP_OVERRIDE = "This shop would override a shop you do not own. Abort.";
 
 	public static String WIKI_LINK = "Link to the wiki: %url%";
+	public static String WIKI_URL = "https://github.com/TheoKah/CarrotShop/wiki/User-Guide";
 	
 	public static String CMD_SPAM = "Shop use report: %status%";
 	public static String CMD_CONFIG_RELOAD = "Config reloaded";
