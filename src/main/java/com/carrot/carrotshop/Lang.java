@@ -98,6 +98,8 @@ public class Lang
 	public static String SHOP_TOGGLE_HELP_NOECON = "Toggle?";
 	public static String SHOP_TOGGLE = "Device toggled for 2 seconds for %price%";
 	public static String SHOP_TOGGLE_NOECON = "Device toggled for 2 seconds";
+	public static String SHOP_DEVICE_OTHER = "%player% used your [%type%] sign for %price%";
+	public static String SHOP_DEVICE_OTHER_NOECON = "%player% used your [%type%] sign";
 	
 	public static String CONSOLE_ERROR_PLAYER = "Need to be a player";
 	public static String CONSOLE_ERROR_LOAD = "Errors occured while loading CarrotShops";

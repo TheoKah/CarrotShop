@@ -2,8 +2,10 @@ package com.carrot.carrotshop.shop;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -53,7 +55,7 @@ public class DeviceOn extends Shop {
 			if (price < 0)
 				throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
 		}
-
+		setOwner(player);
 		ShopsData.clearItemLocations(player);
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
@@ -78,21 +80,29 @@ public class DeviceOn extends Shop {
 
 	@Override
 	public boolean trigger(Player player) {
+		String recap = Lang.SHOP_DEVICEON_NOECON;
+		String orecap = Lang.SHOP_DEVICE_OTHER_NOECON;
 		if (CarrotShop.getEcoService() != null) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
-			if (result.getResult() != ResultType.SUCCESS) {
+			UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(getOwner()).get();
+			TransactionResult accountResult = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+			if (accountResult.getResult() != ResultType.SUCCESS) {
 				player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 				return false;
 			}
-			player.sendMessage(Text.of(Lang.SHOP_DEVICEON.replace("%price%", formatPrice(price))));
-		} else {
-			player.sendMessage(Text.of(Lang.SHOP_DEVICEON_NOECON));
+			recap = Lang.SHOP_DEVICEON.replace("%price%", formatPrice(price));
+			orecap = Lang.SHOP_DEVICE_OTHER.replace("%price%", formatPrice(price));
 		}
 
 		lever.offer(Keys.POWERED, true, CarrotShop.getCause());
 
+		player.sendMessage(Text.of(recap));
 
+		if (!CarrotShop.noSpam(getOwner())) {
+			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
+			if (seller.isPresent())
+				seller.get().sendMessage(Text.of(orecap.replace("%player%", player.getName()).replace("%type%", type)));
+		}
 
 		return true;
 	}
