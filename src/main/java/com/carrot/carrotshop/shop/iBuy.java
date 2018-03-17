@@ -8,6 +8,7 @@ import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
@@ -87,7 +88,7 @@ public class iBuy extends Shop {
 			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 			return false;
 		}
-		Inventory inv = player.getInventory().query(InventoryRow.class);
+		Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(InventoryRow.class));
 
 		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {

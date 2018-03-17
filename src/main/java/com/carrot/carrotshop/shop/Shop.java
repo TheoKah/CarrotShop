@@ -17,6 +17,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -219,7 +220,7 @@ public abstract class Shop {
 		for (Inventory item : needs.slots()) {
 			if (item.peek().isPresent()) {		
 				Optional<ItemStack> template = getTemplate(inventory, item.peek().get());
-				if (!template.isPresent() || inventory.queryAny(template.get()).totalItems() < needs.queryAny(item.peek().get()).totalItems())
+				if (!template.isPresent() || inventory.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(template.get())).totalItems() < needs.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(item.peek().get())).totalItems())
 					return false;
 			}
 		}

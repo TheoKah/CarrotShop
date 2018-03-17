@@ -8,6 +8,7 @@ import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
@@ -89,7 +90,7 @@ public class iTrade extends Shop {
 
 	@Override
 	public boolean trigger(Player player) {
-		Inventory inv = player.getInventory().query(InventoryRow.class);
+		Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(InventoryRow.class));
 		
 		if (!hasEnough(inv, toTake)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_ITEMS));
@@ -103,7 +104,7 @@ public class iTrade extends Shop {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					inv.queryAny(template.get()).poll(item.peek().get().getQuantity());
+					inv.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(template.get())).poll(item.peek().get().getQuantity());
 				}
 			}
 		}

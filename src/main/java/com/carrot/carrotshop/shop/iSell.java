@@ -9,6 +9,7 @@ import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
@@ -83,7 +84,7 @@ public class iSell extends Shop {
 
 	@Override
 	public boolean trigger(Player player) {
-		Inventory inv = player.getInventory().query(InventoryRow.class);
+		Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(InventoryRow.class));
 		
 		if (!hasEnough(inv, itemsTemplate)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_ITEMS));
@@ -96,7 +97,7 @@ public class iSell extends Shop {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					Optional<ItemStack> items = inv.queryAny(template.get()).poll(item.peek().get().getQuantity());
+					Optional<ItemStack> items = inv.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(template.get())).poll(item.peek().get().getQuantity());
 					if (!items.isPresent()) {
 						return false;
 					}

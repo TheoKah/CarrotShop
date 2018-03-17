@@ -9,6 +9,7 @@ import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
@@ -157,7 +158,7 @@ public class aTrade extends Shop {
 			}
 		}
 		
-		Inventory inv = player.getInventory().query(InventoryRow.class);
+		Inventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(InventoryRow.class));
 
 		if (!hasEnough(inv, toTake)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_ITEMS));
@@ -174,7 +175,7 @@ public class aTrade extends Shop {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					Optional<ItemStack> items = inv.queryAny(template.get()).poll(item.peek().get().getQuantity());
+					Optional<ItemStack> items = inv.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(template.get())).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						invToTake.offer(items.get());
 					} else {
@@ -189,7 +190,7 @@ public class aTrade extends Shop {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
 				if (template.isPresent()) {
 					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-					Optional<ItemStack> items = invToGive.queryAny(template.get()).poll(item.peek().get().getQuantity());
+					Optional<ItemStack> items = invToGive.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(template.get())).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						inv.offer(items.get()).getRejectedItems().forEach(action -> {
 							putItemInWorld(action, player.getLocation());
