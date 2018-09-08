@@ -54,6 +54,7 @@ public class Lang
 	
 	public static String CMD_SPAM = "Shop use report: %status%";
 	public static String CMD_CONFIG_RELOAD = "Config reloaded";
+	public static String CMD_CONFIG_RELOAD_FILE = "Could not load or create config file";
 	public static String CMD_CONFIG_CURRENCY = "Default currency is %name% (%id)";
 	
 	public static String CMD_IMPORT_USAGE = "Need one of the following parameters:";
