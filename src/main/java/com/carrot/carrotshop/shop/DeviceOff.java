@@ -61,13 +61,13 @@ public class DeviceOff extends Shop {
 				UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 				TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
 				if (result.getResult() != ResultType.SUCCESS)
-					throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain()));
+					throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", formatPrice(BigDecimal.valueOf(cost))));
 			}
 		}
 		setOwner(player);
 		ShopsData.clearItemLocations(player);
 		if (cost > 0)
-			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain())));
+			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE_COST.replace("%type%", type).replace("%cost%", formatPrice(BigDecimal.valueOf(cost)))));
 		else
 			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
