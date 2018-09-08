@@ -8,6 +8,7 @@ import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
@@ -64,6 +65,15 @@ public class iBuy extends Shop {
 		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
+	}
+	
+	public iBuy(Location<World> sign, ItemStackSnapshot item) {
+		super(sign);
+		price = getPrice(sign);
+		if (price < 0)
+			price = 0;
+		itemsTemplate = Inventory.builder().build(CarrotShop.getInstance());
+		itemsTemplate.offer(item.createStack());
 	}
 
 	@Override

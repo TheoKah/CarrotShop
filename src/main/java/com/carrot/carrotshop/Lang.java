@@ -19,6 +19,7 @@ public class Lang
 	public static String HELP_DESC_CMD_CONFIG_RELOAD = "Reload the language file";
 	public static String HELP_DESC_CMD_CONFIG = "Change or reload config of the plugin";
 	public static String HELP_DESC_CMD_MAIN = "Main CarrotShop command";
+	public static String HELP_DESC_CMD_IMPORT = "Import shop data from another plugin";
 	
 	public static String HELP_HEADER_CMD_MAIN = "/carrotshop";
 	public static String HELP_HEADER_CMD_CONFIG = "/carrotshop config";
@@ -54,6 +55,11 @@ public class Lang
 	public static String CMD_SPAM = "Shop use report: %status%";
 	public static String CMD_CONFIG_RELOAD = "Config reloaded";
 	public static String CMD_CONFIG_CURRENCY = "Default currency is %name% (%id)";
+	
+	public static String CMD_IMPORT_USAGE = "Need one of the following parameters:";
+	public static String CMD_IMPORT_ADMINSHOP_ERROR_FILE = "Unable to find or open AdminShop shops data file";
+	public static String CMD_IMPORT_ADMINSHOP_ERROR_LOAD = "Error while loading the AdminShop shops data file";
+	public static String CMD_IMPORT_ADMINSHOP_ERROR_LOAD_ITEM = "Error while loading the AdminShop shops data item";
 
 	public static String SHOP_PERM = "You don't have perms to build a [%type%] sign";
 	public static String SHOP_CHEST = "%type% signs require a chest";
