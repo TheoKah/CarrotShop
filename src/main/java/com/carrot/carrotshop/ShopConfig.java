@@ -59,7 +59,7 @@ public class ShopConfig
 		Utils.ensurePositiveNumber(config.getNode("cost", "Toggle"), 0);
 		Utils.ensurePositiveNumber(config.getNode("cost", "Trade"), 0);
 
-		config.getNode("others", "emptyhand").setComment("Using signs require empty hands, see https://github.com/TheoKah/CarrotShop/issues/30");
+		config.getNode("others", "emptyhand").setComment("If true, using signs require empty hands, see https://github.com/TheoKah/CarrotShop/issues/30");
 		Utils.ensureBoolean(config.getNode("others", "emptyhand"), false);
 		
 		save();
