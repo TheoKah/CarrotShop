@@ -73,6 +73,7 @@ public class Lang
 	public static String SHOP_FORMAT_SELL = "Sell%items% for %price%?";
 	public static String SHOP_FORMAT_TRADE = "Trade%items% and get%items%?";
 
+	public static String SHOP_EMPTYHAND = "You may only use shops with empty hands";
 	public static String SHOP_EMPTY = "This shop is empty!";
 	public static String SHOP_FULL = "This shop is full!";
 	public static String SHOP_SCHRODINGER = "This shop is either full or empty!";
