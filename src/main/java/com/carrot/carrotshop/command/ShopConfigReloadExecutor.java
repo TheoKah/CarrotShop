@@ -16,7 +16,7 @@ public class ShopConfigReloadExecutor implements CommandExecutor{
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
 		Lang.reload();
-		ShopConfig.load(src);
+		ShopConfig.load();
 		
 		src.sendMessage(Text.of(Lang.CMD_CONFIG_RELOAD));
 		
