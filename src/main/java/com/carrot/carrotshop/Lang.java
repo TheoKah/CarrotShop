@@ -85,8 +85,10 @@ public class Lang
 	public static String SHOP_ERROR_MONEY = "Unable to give you the money!";
 	public static String SHOP_RECAP_BUY = "You bought%items% for %price%";
 	public static String SHOP_RECAP_OBUY = "%player% bought%items% for %price% from you";
+	public static String SHOP_RECAP_OBUY_TAX = "%player% bought%items% for %price% from you. With %tax%% tax you get %tprice%";
 	public static String SHOP_RECAP_SELL = "You sold%items% for %price%";
 	public static String SHOP_RECAP_OSELL = "%player% sold%items% for %price% to you";
+	public static String SHOP_RECAP_OSELL_TAX = "%player% sold%items% for %price% to you. With %tax%% tax you get %tprice%";
 	public static String SHOP_RECAP_TRADE = "You traded %formateditems%";
 	public static String SHOP_RECAP_OTRADE = "%player% traded %formateditems%";
 	public static String SHOP_RECAP_TRADE_FORMAT = "%items% for%items%";
@@ -109,6 +111,7 @@ public class Lang
 	public static String SHOP_TOGGLE = "Device toggled for 2 seconds for %price%";
 	public static String SHOP_TOGGLE_NOECON = "Device toggled for 2 seconds";
 	public static String SHOP_DEVICE_OTHER = "%player% used your [%type%] sign for %price%";
+	public static String SHOP_DEVICE_OTHER_TAX = "%player% used your [%type%] sign for %price%. With %tax%% tax you get %tprice%";
 	public static String SHOP_DEVICE_OTHER_NOECON = "%player% used your [%type%] sign";
 	
 	public static String CONSOLE_ERROR_PLAYER = "Need to be a player";
