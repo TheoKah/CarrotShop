@@ -76,9 +76,7 @@ public class ShopConfig
 
 		config.getNode("others", "emptyhand").setComment("Using signs require empty hands, see https://github.com/TheoKah/CarrotShop/issues/30");
 		Utils.ensureBoolean(config.getNode("others", "emptyhand"), false);
-
-		config.getNode("others", "currency").setComment("The default currency is not stored in this file for technical reasons. You may change it with ingame commands");
-
+		
 		save();
 		if (src != null)
 		{
