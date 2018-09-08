@@ -22,6 +22,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopConfig;
 import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.ShopsLogs;
@@ -59,6 +60,13 @@ public class Buy extends Shop {
 		price = getPrice(sign);
 		if (price < 0)
 			throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
+		int cost = ShopConfig.getNode("cost", "other", type).getInt(0);
+		if (cost > 0) {
+			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
+			if (result.getResult() != ResultType.SUCCESS)
+				throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain()));
+		}
 		sellerChest = locations.peek();
 		itemsTemplate = Inventory.builder().from(items).build(CarrotShop.getInstance());
 		for(Inventory item : items.slots()) {
@@ -67,7 +75,10 @@ public class Buy extends Shop {
 		}
 		setOwner(player);
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
+		if (cost > 0)
+			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain())));
+		else
+			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
 	}

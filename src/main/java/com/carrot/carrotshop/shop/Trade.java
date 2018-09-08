@@ -1,5 +1,6 @@
 package com.carrot.carrotshop.shop;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
@@ -11,6 +12,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
+import org.spongepowered.api.service.economy.account.UniqueAccount;
+import org.spongepowered.api.service.economy.transaction.ResultType;
+import org.spongepowered.api.service.economy.transaction.TransactionResult;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
 import org.spongepowered.api.text.format.TextColors;
@@ -18,6 +22,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopConfig;
 import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.ShopsLogs;
@@ -56,6 +61,13 @@ public class Trade extends Shop {
 		Inventory chestGive = ((TileEntityCarrier) chestGiveOpt.get()).getInventory();
 		if (chestTake.totalItems() == 0 || chestGive.totalItems() == 0)
 			throw new ExceptionInInitializerError(Lang.SHOP_CHEST_EMPTY);
+		int cost = ShopConfig.getNode("cost", "other", type).getInt(0);
+		if (cost > 0) {
+			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
+			if (result.getResult() != ResultType.SUCCESS)
+				throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain()));
+		}
 		toTakeChest = locations.get(0);
 		toGiveChest = locations.get(1);
 		toTake = Inventory.builder().from(chestTake).build(CarrotShop.getInstance());
@@ -70,7 +82,10 @@ public class Trade extends Shop {
 		}
 		setOwner(player);
 		ShopsData.clearItemLocations(player);
-		player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
+		if (cost > 0)
+			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain())));
+		else
+			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		done(player);
 		info(player);
 	}
