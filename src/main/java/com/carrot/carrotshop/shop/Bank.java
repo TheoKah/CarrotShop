@@ -29,13 +29,13 @@ public class Bank extends Shop {
 		super(sign);
 		if (!player.hasPermission("carrotshop.create.bank"))
 			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
-		int cost = ShopConfig.getNode("cost", type).getInt(0);
+		float cost = ShopConfig.getNode("cost", type).getFloat(0);
 		if (cost > 0) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
 			if (result.getResult() != ResultType.SUCCESS)
-				throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain()));
-			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE_COST.replace("%type%", type).replace("%cost%", getCurrency().format(BigDecimal.valueOf(cost), 0).toPlain())));
+				throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", formatPrice(BigDecimal.valueOf(cost))));
+			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE_COST.replace("%type%", type).replace("%cost%", formatPrice(BigDecimal.valueOf(cost)))));
 		} else {
 			player.sendMessage(Text.of(TextColors.DARK_GREEN, Lang.SHOP_DONE.replace("%type%", type)));
 		}

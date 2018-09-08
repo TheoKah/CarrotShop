@@ -115,7 +115,11 @@ public class Toggle extends Shop {
 				return false;
 			}
 			recap = Lang.SHOP_TOGGLE.replace("%price%", formatPrice(price));
-			orecap = Lang.SHOP_DEVICE_OTHER.replace("%price%", formatPrice(price));
+			if (tax > 0)
+				orecap = Lang.SHOP_DEVICE_OTHER_TAX.replace("%tax%", String.valueOf(tax)).replace("%tprice%", formatPrice(price - price * tax / 100));
+			else
+				orecap = Lang.SHOP_DEVICE_OTHER;
+			orecap = orecap.replace("%price%", formatPrice(price));
 		}
 
 		lever.offer(Keys.POWERED, true, CarrotShop.getCause());

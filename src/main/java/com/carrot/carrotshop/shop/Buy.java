@@ -179,7 +179,11 @@ public class Buy extends Shop {
 		if (!CarrotShop.noSpam(getOwner())) {
 			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
 			if (seller.isPresent()) {
-				recap = Lang.SHOP_RECAP_OBUY.replace("%player%", player.getName()).replace("%price%", formatPrice(price));
+				if (tax > 0)
+					recap = Lang.SHOP_RECAP_OBUY_TAX.replace("%tax%", String.valueOf(tax)).replace("%tprice%", formatPrice(price - price * tax / 100));
+				else
+					recap = Lang.SHOP_RECAP_OBUY;
+				recap = recap.replace("%player%", player.getName()).replace("%price%", formatPrice(price));
 				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
 
 			}
