@@ -4,10 +4,6 @@ package com.carrot.carrotshop;
 import java.io.File;
 import java.io.IOException;
 
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -26,12 +22,6 @@ public class ShopConfig
 
 	public static void load()
 	{
-		load(null);
-	}
-
-	public static void load(CommandSource src)
-	{
-		// load file
 		try
 		{
 			if (!configFile.exists())
@@ -47,10 +37,7 @@ public class ShopConfig
 		{
 			CarrotShop.getLogger().error(Lang.CMD_CONFIG_RELOAD_FILE);
 			e.printStackTrace();
-			if (src != null)
-			{
-				src.sendMessage(Text.of(TextColors.RED, Lang.CMD_CONFIG_RELOAD_FILE));
-			}
+			return;
 		}
 		
 
@@ -78,10 +65,6 @@ public class ShopConfig
 		Utils.ensureBoolean(config.getNode("others", "emptyhand"), false);
 		
 		save();
-		if (src != null)
-		{
-			src.sendMessage(Text.of(TextColors.GREEN, Lang.CMD_CONFIG_RELOAD));
-		}
 	}
 
 	public static void save()
