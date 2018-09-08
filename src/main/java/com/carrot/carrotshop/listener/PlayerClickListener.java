@@ -20,6 +20,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
+import com.carrot.carrotshop.ShopConfig;
 import com.carrot.carrotshop.Lang;
 import com.carrot.carrotshop.ShopsData;
 import com.carrot.carrotshop.shop.Shop;
@@ -35,6 +36,12 @@ public class PlayerClickListener {
 
 		Optional<List<Shop>> shops = ShopsData.getShops(optLoc.get());
 		if (shops.isPresent()) {
+			
+			if (ShopConfig.getNode("others", "emptyhand").getBoolean() && (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() || player.getItemInHand(HandTypes.OFF_HAND).isPresent())){
+				player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_EMPTYHAND));
+				return;
+			}
+			
 			shops.get().forEach((shop) -> {
 				if (shop.getLocation().equals(optLoc.get())) {
 					shop.trigger(player);
