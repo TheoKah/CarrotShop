@@ -21,7 +21,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @ConfigSerializable
 public class Heal extends Shop {
 	@Setting
-	private int price;
+	private float price;
 	
 	static private String type = "Heal";
 

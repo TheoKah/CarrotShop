@@ -36,7 +36,7 @@ public class aBuy extends Shop {
 	@Setting
 	private Location<World> sellerChest;
 	@Setting
-	private int price;
+	private float price;
 	
 	static private String type = "aBuy";
 

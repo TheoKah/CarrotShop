@@ -2,6 +2,7 @@ package com.carrot.carrotshop.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +84,7 @@ public class ShopImportExecutor implements CommandExecutor{
 							signData.set(signData.lines().set(2, Text.of("x", adminshop.item.getCount())));
 							signData.set(signData.lines().set(3, Text.EMPTY));
 							if (adminshop.price > 0 && CarrotShop.getEcoService() != null)
-								signData.set(signData.lines().set(3, Text.of((int) adminshop.price, " ", (adminshop.price == 1 ? CarrotShop.getEcoService().getDefaultCurrency().getDisplayName() : CarrotShop.getEcoService().getDefaultCurrency().getPluralDisplayName()))));
+								signData.set(signData.lines().set(3, Text.of(ShopsData.getCurrency().format(BigDecimal.valueOf(adminshop.price)))));
 							sign.get().offer(signData);
 							
 							Shop shop;

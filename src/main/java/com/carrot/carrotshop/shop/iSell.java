@@ -34,7 +34,7 @@ public class iSell extends Shop {
 	@Setting
 	private Inventory itemsTemplate;
 	@Setting
-	private int price;
+	private float price;
 
 	static private String type = "iSell";
 	

@@ -33,7 +33,7 @@ public class iBuy extends Shop {
 	@Setting
 	private Inventory itemsTemplate;
 	@Setting
-	private int price;
+	private float price;
 
 	static private String type = "iBuy";
 	
