@@ -56,7 +56,7 @@ public class DeviceOff extends Shop {
 			price = getPrice(sign);
 			if (price < 0)
 				throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
-			cost = ShopConfig.getNode("cost", "other", type).getInt(0);
+			cost = ShopConfig.getNode("cost", type).getInt(0);
 			if (cost > 0) {
 				UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 				TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());

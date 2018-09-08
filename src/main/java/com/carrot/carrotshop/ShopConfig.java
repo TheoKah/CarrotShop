@@ -57,22 +57,22 @@ public class ShopConfig
 		// check integrity
 
 		config.getNode("taxes").setComment("Percentage of the displayed price that will not be given to shop owner. Note that this option might not work well if you are using special economy plugins such as the ones that use items as currency");
-		Utils.ensurePositiveNumber(config.getNode("taxes", "other", "Heal"), 0);
-		Utils.ensurePositiveNumber(config.getNode("taxes", "user", "Buy"), 0);
-		Utils.ensurePositiveNumber(config.getNode("taxes", "user", "Sell"), 0);
-		Utils.ensurePositiveNumber(config.getNode("taxes", "user", "DeviceOn"), 0);
-		Utils.ensurePositiveNumber(config.getNode("taxes", "user", "DeviceOff"), 0);
-		Utils.ensurePositiveNumber(config.getNode("taxes", "user", "Toggle"), 0);
+		Utils.ensurePositiveNumber(config.getNode("taxes", "Heal"), 0);
+		Utils.ensurePositiveNumber(config.getNode("taxes", "Buy"), 0);
+		Utils.ensurePositiveNumber(config.getNode("taxes", "Sell"), 0);
+		Utils.ensurePositiveNumber(config.getNode("taxes", "DeviceOn"), 0);
+		Utils.ensurePositiveNumber(config.getNode("taxes", "DeviceOff"), 0);
+		Utils.ensurePositiveNumber(config.getNode("taxes", "Toggle"), 0);
 
 		config.getNode("cost").setComment("Cost for creating a sign");
-		Utils.ensurePositiveNumber(config.getNode("cost", "other", "Bank"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "other", "Heal"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "user", "Buy"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "user", "Sell"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "user", "DeviceOn"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "user", "DeviceOff"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "user", "Toggle"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "user", "Trade"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "Bank"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "Heal"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "Buy"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "Sell"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "DeviceOn"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "DeviceOff"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "Toggle"), 0);
+		Utils.ensurePositiveNumber(config.getNode("cost", "Trade"), 0);
 
 		config.getNode("others", "emptyhand").setComment("Using signs require empty hands, see https://github.com/TheoKah/CarrotShop/issues/30");
 		Utils.ensureBoolean(config.getNode("others", "emptyhand"), false);

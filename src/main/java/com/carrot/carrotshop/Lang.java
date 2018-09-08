@@ -115,7 +115,7 @@ public class Lang
 	public static String CONSOLE_ERROR_LOAD = "Errors occured while loading CarrotShops";
 	public static String CONSOLE_ERROR_LOGS = "Unable to store logs for shop %owner% triggered by %source%: %error%";
 	public static String CONSOLE_ERROR_GENERIC = "ERROR: %error%";
-
+	
 	private static File languageFile;
 	private static ConfigurationLoader<CommentedConfigurationNode> languageManager;
 	private static CommentedConfigurationNode language;
