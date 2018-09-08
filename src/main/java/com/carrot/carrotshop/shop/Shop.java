@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
@@ -69,13 +70,13 @@ public abstract class Shop {
 		return true;
 	}
 
-	public final boolean destroy(Player player) {
-		if (isOwner(player)) {
-			setReset();
-			ShopsData.delShop(this);
-			return true;
+	public final boolean destroy(CommandSource player) {
+		if (player instanceof Player && !isOwner((Player) player)) {
+			return false;
 		}
-		return false;
+		setReset();
+		ShopsData.delShop(this);
+		return true;
 	}
 
 	public Location<World> getLocation() {
@@ -167,7 +168,7 @@ public abstract class Shop {
 	protected final String formatPrice(int value) {
 		return formatPrice(BigDecimal.valueOf(value));
 	}
-	
+
 	protected final String formatPrice(BigDecimal value) {
 		String str;
 		if (value == BigDecimal.ZERO)

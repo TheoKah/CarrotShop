@@ -24,6 +24,7 @@ import com.carrot.carrotshop.command.NoSpamExecutor;
 import com.carrot.carrotshop.command.ShopConfigCurrencyExecutor;
 import com.carrot.carrotshop.command.ShopConfigExecutor;
 import com.carrot.carrotshop.command.ShopConfigReloadExecutor;
+import com.carrot.carrotshop.command.ShopImportExecutor;
 import com.carrot.carrotshop.command.ShopMainExecutor;
 import com.carrot.carrotshop.command.ShopReportExecutor;
 import com.carrot.carrotshop.command.ShopServerReportExecutor;
@@ -113,6 +114,13 @@ public class CarrotShop {
 				.child(shopConfigReload, "reload")
 				.build();
 		
+		CommandSpec shopImport = CommandSpec.builder()
+				.description(Text.of(Lang.HELP_DESC_CMD_IMPORT))
+				.permission("carrotshop.import")
+				.executor(new ShopImportExecutor(defaultConfigDir))
+				.arguments(GenericArguments.optional(GenericArguments.string(Text.of("plugin"))))
+				.build();
+		
 		CommandSpec shopMain = CommandSpec.builder()
 				.description(Text.of(Lang.HELP_DESC_CMD_MAIN))
 				.executor(new ShopMainExecutor())
@@ -121,6 +129,7 @@ public class CarrotShop {
 				.child(shopReport, "report", "shopreport", "r")
 				.child(shopServerReport, "serverreport", "server", "servreport", "sr")
 				.child(shopConfig, "config")
+				.child(shopImport, "import")
 				.build();
 
 		Sponge.getCommandManager().register(plugin, shopReport, "shopreport", "carrotshopreport", "cr", "sr", "carrotreport", "creport", "sreport");
