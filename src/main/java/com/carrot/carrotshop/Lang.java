@@ -67,6 +67,7 @@ public class Lang
 	public static String SHOP_CHEST2 = "%type% signs require two chests";
 	public static String SHOP_LEVER = "%type% signs require a lever";
 	public static String SHOP_DONE = "You have setup a [%type%] shop:";
+	public static String SHOP_DONE_COST = "You have setup a [%type%] shop for %cost%:";
 	public static String SHOP_CHEST_EMPTY = "chest cannot be empty";
 	public static String SHOP_PRICE = "bad price";
 	public static String SHOP_FORMAT_BUY = "Buy%items% for %price%?";
@@ -79,6 +80,7 @@ public class Lang
 	public static String SHOP_SCHRODINGER = "This shop is either full or empty!";
 	public static String SHOP_ITEMS = "You don't have the items!";
 	public static String SHOP_MONEY = "You don't have enough money!";
+	public static String SHOP_COST = "You don't have enough money to create the shop. A %type% shop cost %cost%";
 	public static String SHOP_OMONEY = "Shop owner don't have enough money!";
 	public static String SHOP_ERROR_MONEY = "Unable to give you the money!";
 	public static String SHOP_RECAP_BUY = "You bought%items% for %price%";
