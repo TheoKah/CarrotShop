@@ -44,7 +44,6 @@ public class ShopConfig
 		// check integrity
 
 		config.getNode("taxes").setComment("Percentage of the displayed price that will not be given to shop owner. Note that this option might not work well if you are using special economy plugins such as the ones that use items as currency");
-		Utils.ensurePositiveNumber(config.getNode("taxes", "Heal"), 0);
 		Utils.ensurePositiveNumber(config.getNode("taxes", "Buy"), 0);
 		Utils.ensurePositiveNumber(config.getNode("taxes", "Sell"), 0);
 		Utils.ensurePositiveNumber(config.getNode("taxes", "DeviceOn"), 0);
@@ -53,7 +52,6 @@ public class ShopConfig
 
 		config.getNode("cost").setComment("Cost for creating a sign");
 		Utils.ensurePositiveNumber(config.getNode("cost", "Bank"), 0);
-		Utils.ensurePositiveNumber(config.getNode("cost", "Heal"), 0);
 		Utils.ensurePositiveNumber(config.getNode("cost", "Buy"), 0);
 		Utils.ensurePositiveNumber(config.getNode("cost", "Sell"), 0);
 		Utils.ensurePositiveNumber(config.getNode("cost", "DeviceOn"), 0);
