@@ -60,6 +60,7 @@ public class CarrotShop {
 		rootDir = new File(defaultConfigDir, "carrotshop");
 
 		Lang.init(rootDir);
+		ShopConfig.init(rootDir);
 		ShopsLogs.init(rootDir);
 		ShopsData.init(rootDir);
 	}
@@ -71,6 +72,7 @@ public class CarrotShop {
 		.getRegistration(EconomyService.class)
 		.ifPresent(prov -> economyService = prov.getProvider());
 
+		ShopConfig.load();
 		ShopsData.load();
 
 		CommandSpec shopReport = CommandSpec.builder()
