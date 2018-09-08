@@ -119,7 +119,7 @@ public class ShopsLogs {
 		return Optional.of(data.toString());
 	}
 
-	public static void log(UUID shopOwnerUUID, Player player, String type, Location<World> location, Optional<Integer> price, Optional<Currency> currency, Optional<Inventory> itemsA, Optional<Inventory> itemsB) {
+	public static void log(UUID shopOwnerUUID, Player player, String type, Location<World> location, Optional<Float> price, Optional<Currency> currency, Optional<Inventory> itemsA, Optional<Inventory> itemsB) {
 
 		String shopOwner = shopOwnerUUID != null ? shopOwnerUUID.toString() : "server";
 

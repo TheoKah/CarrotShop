@@ -34,7 +34,7 @@ public class Toggle extends Shop {
 	@Setting
 	private Location<World> lever;
 	@Setting
-	private int price;
+	private float price;
 	
 	static private String type = "Toggle";
 
@@ -54,12 +54,12 @@ public class Toggle extends Shop {
 
 		lever = locations.peek();
 
-		int cost = 0;
+		float cost = 0;
 		if (CarrotShop.getEcoService() != null) {
 			price = getPrice(sign);
 			if (price < 0)
 				throw new ExceptionInInitializerError(Lang.SHOP_PRICE);
-			cost = ShopConfig.getNode("cost", type).getInt(0);
+			cost = ShopConfig.getNode("cost", type).getFloat(0);
 			if (cost > 0) {
 				UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 				TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());

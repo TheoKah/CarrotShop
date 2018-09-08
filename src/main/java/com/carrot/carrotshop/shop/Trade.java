@@ -61,7 +61,7 @@ public class Trade extends Shop {
 		Inventory chestGive = ((TileEntityCarrier) chestGiveOpt.get()).getInventory();
 		if (chestTake.totalItems() == 0 || chestGive.totalItems() == 0)
 			throw new ExceptionInInitializerError(Lang.SHOP_CHEST_EMPTY);
-		int cost = ShopConfig.getNode("cost", type).getInt(0);
+		float cost = ShopConfig.getNode("cost", type).getFloat(0);
 		if (cost > 0) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());

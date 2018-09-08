@@ -28,7 +28,7 @@ public class aDeviceOn extends Shop {
 	@Setting
 	private Location<World> lever;
 	@Setting
-	private int price;
+	private float price;
 	
 	static private String type = "aDeviceOn";
 

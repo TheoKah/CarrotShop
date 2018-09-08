@@ -1,6 +1,7 @@
 package com.carrot.carrotshop.shop;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -167,7 +168,7 @@ public abstract class Shop {
 		currency = first;
 	}
 
-	protected final String formatPrice(int value) {
+	protected final String formatPrice(float value) {
 		return formatPrice(BigDecimal.valueOf(value));
 	}
 
@@ -180,7 +181,7 @@ public abstract class Shop {
 		else
 			str = Lang.PRICE_DEFAULT;
 		return str
-				.replace("%value%", value.toString())
+				.replace("%value%", new DecimalFormat("#.##").format(value))
 				.replace("%currencyFull%", getCurrency().getDisplayName().toPlain())
 				.replace("%currencyFullPlural%", getCurrency().getPluralDisplayName().toPlain())
 				.replace("%currencySymbol%", getCurrency().getSymbol().toPlain());
@@ -207,15 +208,18 @@ public abstract class Shop {
 
 	}
 
-	static protected final int getPrice(Location<World> location) {
+	static protected final float getPrice(Location<World> location) {
 		Optional<TileEntity> sign = location.getTileEntity();
 		if (sign.isPresent() && sign.get().supports(SignData.class)) {
 			Optional<SignData> data = sign.get().get(SignData.class);
 			if (data.isPresent()) {
-				String priceLine = data.get().lines().get(3).toPlain().replaceAll("[^\\d]", "");
+				CarrotShop.getLogger().info(data.get().lines().get(3).toPlain());
+				CarrotShop.getLogger().info(data.get().lines().get(3).toPlain().replace(",", "."));
+				CarrotShop.getLogger().info(data.get().lines().get(3).toPlain().replace(",", ".").replaceAll("[^\\d.]", ""));
+				String priceLine = data.get().lines().get(3).toPlain().replace(",", ".").replaceAll("[^\\d.]", "");
 				if (priceLine.length() == 0)
 					return 0;
-				return Integer.parseInt(priceLine);
+				return Float.parseFloat(new DecimalFormat("#.##").format(Float.parseFloat(priceLine)).replace(",", "."));
 			}
 		}
 		return -1;
