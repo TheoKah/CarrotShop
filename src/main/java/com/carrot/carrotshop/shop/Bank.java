@@ -29,7 +29,7 @@ public class Bank extends Shop {
 		super(sign);
 		if (!player.hasPermission("carrotshop.create.bank"))
 			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
-		int cost = ShopConfig.getNode("cost", "other", type).getInt(0);
+		int cost = ShopConfig.getNode("cost", type).getInt(0);
 		if (cost > 0) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
