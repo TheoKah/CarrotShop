@@ -162,7 +162,17 @@ public class Sell extends Shop {
 		}
 
 		UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-		TransactionResult result = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+		float tax = ShopConfig.getNode("taxes", type).getFloat(0);
+		TransactionResult result;
+		if (tax > 0) {
+			result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+			if (result.getResult() == ResultType.SUCCESS) {
+				result = sellerAccount.deposit(getCurrency(), BigDecimal.valueOf(price - price * tax / 100), CarrotShop.getCause());
+			}
+
+		} else {
+			result = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+		}
 		if (result.getResult() != ResultType.SUCCESS) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_OMONEY));
 			return false;

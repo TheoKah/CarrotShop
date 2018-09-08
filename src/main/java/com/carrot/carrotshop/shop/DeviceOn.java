@@ -97,7 +97,17 @@ public class DeviceOn extends Shop {
 		if (CarrotShop.getEcoService() != null) {
 			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
 			UniqueAccount sellerAccount = CarrotShop.getEcoService().getOrCreateAccount(getOwner()).get();
-			TransactionResult accountResult = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+			float tax = ShopConfig.getNode("taxes", type).getFloat(0);
+			TransactionResult accountResult;
+			if (tax > 0) {
+				accountResult = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+				if (accountResult.getResult() == ResultType.SUCCESS) {
+					accountResult = sellerAccount.deposit(getCurrency(), BigDecimal.valueOf(price - price * tax / 100), CarrotShop.getCause());
+				}
+
+			} else {
+				accountResult = buyerAccount.transfer(sellerAccount, getCurrency(), BigDecimal.valueOf(price), CarrotShop.getCause());
+			}
 			if (accountResult.getResult() != ResultType.SUCCESS) {
 				player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_MONEY));
 				return false;
