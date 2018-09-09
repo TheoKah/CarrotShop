@@ -62,12 +62,15 @@ public class Trade extends Shop {
 		Inventory chestGive = ((TileEntityCarrier) chestGiveOpt.get()).getInventory();
 		if (chestTake.totalItems() == 0 || chestGive.totalItems() == 0)
 			throw new ExceptionInInitializerError(Lang.SHOP_CHEST_EMPTY);
-		float cost = ShopConfig.getNode("cost", type).getFloat(0);
-		if (cost > 0) {
-			UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
-			TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
-			if (result.getResult() != ResultType.SUCCESS)
-				throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", formatPrice(BigDecimal.valueOf(cost))));
+		float cost = 0;
+		if (CarrotShop.getEcoService() != null) {
+			cost = ShopConfig.getNode("cost", type).getFloat(0);
+			if (cost > 0) {
+				UniqueAccount buyerAccount = CarrotShop.getEcoService().getOrCreateAccount(player.getUniqueId()).get();
+				TransactionResult result = buyerAccount.withdraw(getCurrency(), BigDecimal.valueOf(cost), CarrotShop.getCause());
+				if (result.getResult() != ResultType.SUCCESS)
+					throw new ExceptionInInitializerError(Lang.SHOP_COST.replace("%type%", type).replace("%cost%", formatPrice(BigDecimal.valueOf(cost))));
+			}
 		}
 		toTakeChest = locations.get(0);
 		toGiveChest = locations.get(1);
