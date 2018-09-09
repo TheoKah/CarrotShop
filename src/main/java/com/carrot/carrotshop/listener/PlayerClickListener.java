@@ -37,7 +37,9 @@ public class PlayerClickListener {
 		Optional<List<Shop>> shops = ShopsData.getShops(optLoc.get());
 		if (shops.isPresent()) {
 			
-			if (ShopConfig.getNode("others", "emptyhand").getBoolean() && (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() || player.getItemInHand(HandTypes.OFF_HAND).isPresent())){
+			if (ShopConfig.getNode("others", "emptyhand").getBoolean() && 
+					((player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getType() != ItemTypes.AIR) ||
+							(player.getItemInHand(HandTypes.OFF_HAND).isPresent() && player.getItemInHand(HandTypes.OFF_HAND).get().getType() != ItemTypes.AIR))) {
 				player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_EMPTYHAND));
 				return;
 			}
