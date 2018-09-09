@@ -107,11 +107,7 @@ public class Buy extends Shop {
 	public void info(Player player) {
 		Builder builder = Text.builder();
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_BUY, "%items%", 0).replace("%price%", formatPrice(price))));
-		for (Inventory item : itemsTemplate.slots()) {
-			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-			}
-		}
+		builder.append(formatInventoryNames(itemsTemplate));
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_BUY, "%items%", 1).replace("%price%", formatPrice(price))));
 		player.sendMessage(builder.build());
 		if (!update())
@@ -152,13 +148,10 @@ public class Buy extends Shop {
 
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
-		Builder itemsName = Text.builder();
-
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						inv.offer(items.get()).getRejectedItems().forEach(action -> {
@@ -174,7 +167,7 @@ public class Buy extends Shop {
 		ShopsLogs.log(getOwner(), player, "buy", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
 		String recap = Lang.SHOP_RECAP_BUY.replace("%price%", formatPrice(price));
-		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
+		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), formatInventoryNames(itemsTemplate), Lang.split(recap, "%items%", 1)));
 
 		if (!CarrotShop.noSpam(getOwner())) {
 			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
@@ -184,7 +177,7 @@ public class Buy extends Shop {
 				else
 					recap = Lang.SHOP_RECAP_OBUY;
 				recap = recap.replace("%player%", player.getName()).replace("%price%", formatPrice(price));
-				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
+				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), formatInventoryNames(itemsTemplate), Lang.split(recap, "%items%", 1)));
 
 			}
 		}

@@ -40,7 +40,7 @@ public class Trade extends Shop {
 	private Location<World> toGiveChest;
 	@Setting
 	private Location<World> toTakeChest;
-	
+
 	static private String type = "Trade";
 
 	public Trade() {
@@ -130,17 +130,9 @@ public class Trade extends Shop {
 	public void info(Player player) {
 		Builder builder = Text.builder();
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 0)));
-		for (Inventory item : toTake.slots()) {
-			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-			}
-		}
+		builder.append(formatInventoryNames(toTake));
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 1)));
-		for (Inventory item : toGive.slots()) {
-			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-			}
-		}
+		builder.append(formatInventoryNames(toGive));
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_TRADE, "%items%", 2)));
 		player.sendMessage(builder.build());
 		if (!update())
@@ -172,24 +164,21 @@ public class Trade extends Shop {
 				return false;
 			}
 		}
-		
+
 		Inventory inv = player.getInventory().query(InventoryRow.class);
 
 		if (!hasEnough(inv, toTake)) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, Lang.SHOP_ITEMS));
 			return false;
 		}
-		
+
 		Inventory invToTake = ((TileEntityCarrier) chestToTake.get()).getInventory();
 		Inventory invToGive = ((TileEntityCarrier) chestToGive.get()).getInventory();
 
-		Builder itemsName = Text.builder();
-		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 0)));
 		for (Inventory item : toTake.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						invToTake.offer(items.get());
@@ -199,12 +188,10 @@ public class Trade extends Shop {
 				}
 			}
 		}
-		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 1)));
 		for (Inventory item : toGive.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(invToGive, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = invToGive.query(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						inv.offer(items.get()).getRejectedItems().forEach(action -> {
@@ -216,18 +203,28 @@ public class Trade extends Shop {
 				}
 			}
 		}
-		itemsName.append(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE_FORMAT, "%items%", 2)));
 
 		ShopsLogs.log(getOwner(), player, "trade", super.getLocation(), Optional.empty(), Optional.empty(), Optional.of(toGive), Optional.of(toTake));
 
-		player.sendMessage(Text.of(Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 0), itemsName.build(), Lang.split(Lang.SHOP_RECAP_TRADE, "%formateditems%", 1)));
+		player.sendMessage(Text.of(Lang.split(
+				Lang.SHOP_RECAP_TRADE, "%items%", 0),
+				formatInventoryNames(toTake),
+				Lang.split(Lang.SHOP_RECAP_TRADE, "%items%", 1),
+				formatInventoryNames(toGive),
+				Lang.split(Lang.SHOP_RECAP_TRADE, "%items%", 2)
+				));
 
 		if (!CarrotShop.noSpam(getOwner())) {
 			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
 			if (seller.isPresent()) {
 				String recap = Lang.SHOP_RECAP_OTRADE.replace("%player%", player.getName());
-				seller.get().sendMessage(Text.of(Lang.split(recap, "%formateditems%", 0), itemsName.build(), Lang.split(recap, "%formateditems%", 1)));
-
+				seller.get().sendMessage(Text.of(Lang.split(
+						recap, "%items%", 0),
+						formatInventoryNames(toTake),
+						Lang.split(recap, "%items%", 1),
+						formatInventoryNames(toGive),
+						Lang.split(recap, "%items%", 2)
+						));
 			}
 		}
 

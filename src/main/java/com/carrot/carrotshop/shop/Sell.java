@@ -108,11 +108,7 @@ public class Sell extends Shop {
 	public void info(Player player) {
 		Builder builder = Text.builder();
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_SELL, "%items%", 0).replace("%price%", formatPrice(price))));
-		for (Inventory item : itemsTemplate.slots()) {
-			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-			}
-		}
+		builder.append(formatInventoryNames(itemsTemplate));
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_SELL, "%items%", 1).replace("%price%", formatPrice(price))));
 		player.sendMessage(builder.build());
 		if (!update())
@@ -145,12 +141,10 @@ public class Sell extends Shop {
 		
 		Inventory invChest = ((TileEntityCarrier) chest.get()).getInventory();
 
-		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
 					if (items.isPresent()) {
 						invChest.offer(items.get());
@@ -181,7 +175,7 @@ public class Sell extends Shop {
 		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
 		String recap = Lang.SHOP_RECAP_SELL.replace("%price%", formatPrice(price));
-		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
+		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), formatInventoryNames(itemsTemplate), Lang.split(recap, "%items%", 1)));
 
 		if (!CarrotShop.noSpam(getOwner())) {
 			Optional<Player> seller = Sponge.getServer().getPlayer(getOwner());
@@ -191,7 +185,7 @@ public class Sell extends Shop {
 				else
 					recap = Lang.SHOP_RECAP_OSELL;
 				recap = recap.replace("%player%", player.getName()).replace("%price%", formatPrice(price));
-				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
+				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), formatInventoryNames(itemsTemplate), Lang.split(recap, "%items%", 1)));
 
 			}
 		}

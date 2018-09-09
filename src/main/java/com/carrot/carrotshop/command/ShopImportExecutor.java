@@ -77,10 +77,11 @@ public class ShopImportExecutor implements CommandExecutor{
 								signData.set(signData.lines().set(0, Text.of("[iSell]")));
 							else
 								signData.set(signData.lines().set(0, Text.of("[iBuy]")));
-							if (adminshop.item.getType().getTranslation().get().length() > 15)
-								signData.set(signData.lines().set(1, Text.of(adminshop.item.getType().getTranslation().get().substring(12), "...")));
+							String itemName = Shop.getItemName(adminshop.item.createStack()).toPlain();
+							if (itemName.length() > 15)
+								signData.set(signData.lines().set(1, Text.of(itemName.substring(12), "...")));
 							else
-								signData.set(signData.lines().set(1, Text.of(adminshop.item.getType().getTranslation().get())));
+								signData.set(signData.lines().set(1, Text.of(itemName)));
 							signData.set(signData.lines().set(2, Text.of("x", adminshop.item.getCount())));
 							signData.set(signData.lines().set(3, Text.EMPTY));
 							if (adminshop.price > 0 && CarrotShop.getEcoService() != null)

@@ -81,11 +81,7 @@ public class iSell extends Shop {
 	public void info(Player player) {
 		Builder builder = Text.builder();
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_SELL, "%items%", 0).replace("%price%", formatPrice(price))));
-		for (Inventory item : itemsTemplate.slots()) {
-			if (item.peek().isPresent()) {
-				builder.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
-			}
-		}
+		builder.append(formatInventoryNames(itemsTemplate));
 		builder.append(Text.of(Lang.split(Lang.SHOP_FORMAT_SELL, "%items%", 1).replace("%price%", formatPrice(price))));
 		player.sendMessage(builder.build());
 		update();
@@ -100,12 +96,10 @@ public class iSell extends Shop {
 			return false;
 		}
 
-		Builder itemsName = Text.builder();
 		for (Inventory item : itemsTemplate.slots()) {
 			if (item.peek().isPresent()) {
 				Optional<ItemStack> template = getTemplate(inv, item.peek().get());
 				if (template.isPresent()) {
-					itemsName.append(Text.of(TextColors.YELLOW, " ", item.peek().get().getTranslation().get(), " x", item.peek().get().getQuantity()));
 					Optional<ItemStack> items = inv.query(template.get()).poll(item.peek().get().getQuantity());
 					if (!items.isPresent()) {
 						return false;
@@ -124,7 +118,7 @@ public class iSell extends Shop {
 		ShopsLogs.log(getOwner(), player, "sell", super.getLocation(), Optional.of(price), getRawCurrency(), Optional.of(itemsTemplate), Optional.empty());
 
 		String recap = Lang.SHOP_RECAP_SELL.replace("%price%", formatPrice(price));
-		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
+		player.sendMessage(Text.of(Lang.split(recap, "%items%", 0), formatInventoryNames(itemsTemplate), Lang.split(recap, "%items%", 1)));
 
 		return true;
 	}

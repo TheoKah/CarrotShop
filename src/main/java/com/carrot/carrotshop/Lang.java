@@ -70,9 +70,9 @@ public class Lang
 	public static String SHOP_DONE_COST = "You have setup a [%type%] shop for %cost%:";
 	public static String SHOP_CHEST_EMPTY = "chest cannot be empty";
 	public static String SHOP_PRICE = "bad price";
-	public static String SHOP_FORMAT_BUY = "Buy%items% for %price%?";
-	public static String SHOP_FORMAT_SELL = "Sell%items% for %price%?";
-	public static String SHOP_FORMAT_TRADE = "Trade%items% and get%items%?";
+	public static String SHOP_FORMAT_BUY = "Buy %items% for %price%?";
+	public static String SHOP_FORMAT_SELL = "Sell %items% for %price%?";
+	public static String SHOP_FORMAT_TRADE = "Trade %items% and get %items%?";
 
 	public static String SHOP_EMPTYHAND = "You may only use shops with empty hands";
 	public static String SHOP_EMPTY = "This shop is empty!";
@@ -83,15 +83,14 @@ public class Lang
 	public static String SHOP_COST = "You don't have enough money to create the shop. A %type% shop cost %cost%";
 	public static String SHOP_OMONEY = "Shop owner don't have enough money!";
 	public static String SHOP_ERROR_MONEY = "Unable to give you the money!";
-	public static String SHOP_RECAP_BUY = "You bought%items% for %price%";
-	public static String SHOP_RECAP_OBUY = "%player% bought%items% for %price% from you";
-	public static String SHOP_RECAP_OBUY_TAX = "%player% bought%items% for %price% from you. With %tax%% tax you get %tprice%";
-	public static String SHOP_RECAP_SELL = "You sold%items% for %price%";
-	public static String SHOP_RECAP_OSELL = "%player% sold%items% for %price% to you";
-	public static String SHOP_RECAP_OSELL_TAX = "%player% sold%items% for %price% to you. With %tax%% tax you get %tprice%";
-	public static String SHOP_RECAP_TRADE = "You traded %formateditems%";
-	public static String SHOP_RECAP_OTRADE = "%player% traded %formateditems%";
-	public static String SHOP_RECAP_TRADE_FORMAT = "%items% for%items%";
+	public static String SHOP_RECAP_BUY = "You bought %items% for %price%";
+	public static String SHOP_RECAP_OBUY = "%player% bought %items% for %price% from you";
+	public static String SHOP_RECAP_OBUY_TAX = "%player% bought %items% for %price% from you. With %tax%% tax you get %tprice%";
+	public static String SHOP_RECAP_SELL = "You sold %items% for %price%";
+	public static String SHOP_RECAP_OSELL = "%player% sold %items% for %price% to you";
+	public static String SHOP_RECAP_OSELL_TAX = "%player% sold %items% for %price% to you. With %tax%% tax you get %tprice%";
+	public static String SHOP_RECAP_TRADE = "You traded %items% for %items%";
+	public static String SHOP_RECAP_OTRADE = "%player% traded %items% for %items%";
 	public static String SHOP_BANK_HELP = "Right click to see your balance";
 	public static String SHOP_BANK = "Your balance: %bank%";
 	public static String SHOP_HEAL_HELP = "Heal for %price%?";
