@@ -186,7 +186,7 @@ public class Sell extends Shop {
 				else
 					recap = Lang.SHOP_RECAP_OSELL;
 				recap = recap.replace("%player%", player.getName()).replace("%price%", formatPrice(price));
-				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), itemsName.build(), Lang.split(recap, "%items%", 1)));
+				seller.get().sendMessage(Text.of(Lang.split(recap, "%items%", 0), formatInventoryNames(itemsTemplate), Lang.split(recap, "%items%", 1)));
 
 			}
 		}
