@@ -215,9 +215,6 @@ public abstract class Shop {
 		if (sign.isPresent() && sign.get().supports(SignData.class)) {
 			Optional<SignData> data = sign.get().get(SignData.class);
 			if (data.isPresent()) {
-				CarrotShop.getLogger().info(data.get().lines().get(3).toPlain());
-				CarrotShop.getLogger().info(data.get().lines().get(3).toPlain().replace(",", "."));
-				CarrotShop.getLogger().info(data.get().lines().get(3).toPlain().replace(",", ".").replaceAll("[^\\d.]", ""));
 				String priceLine = data.get().lines().get(3).toPlain().replace(",", ".").replaceAll("[^\\d.]", "");
 				if (priceLine.length() == 0)
 					return 0;
