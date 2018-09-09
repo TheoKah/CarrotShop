@@ -12,6 +12,7 @@ import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -22,6 +23,7 @@ import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -221,6 +223,40 @@ public abstract class Shop {
 		return -1;
 	}
 
+	static public final Text getItemName(ItemStack itemStack) {
+		Text displayName = itemStack.get(Keys.DISPLAY_NAME).orElse(Text.of(itemStack.getTranslation()));
+		TextColor itemColor = displayName.getColor();
+		if (!displayName.getChildren().isEmpty())
+			itemColor = displayName.getChildren().get(0).getColor();
+		if (itemStack.get(EnchantmentData.class).isPresent())
+			itemColor = TextColors.AQUA;
+		if (itemColor == TextColors.NONE)
+			itemColor = TextColors.DARK_AQUA;
+		return Text.of(itemColor, displayName.toPlain());
+	}
+
+	static public final Text formatItemName(ItemStack itemStack) {
+		return Text.builder()
+				.append(Text.of(TextColors.GRAY, "["), getItemName(itemStack), Text.of(TextColors.GRAY, "]"))
+				.onHover(TextActions.showItem(itemStack.createSnapshot()))
+				.build();
+	}
+
+	static public final Text formatInventoryNames(Inventory inventory) {
+		Text.Builder builder = Text.builder();
+		boolean more = false;
+		for (Inventory item : inventory.slots()) {
+			if (item.peek().isPresent()) {
+				if (more) {
+					builder.append(Text.of(", "));
+				}
+				builder.append(Text.of(formatItemName(item.peek().get()), TextColors.GRAY, " x ", TextColors.YELLOW, item.peek().get().getQuantity()));
+				more = true;
+			}
+		}
+		return builder.build();
+	}
+
 	static public boolean hasEnough(Inventory inventory, Inventory needs) {
 		for (Inventory item : needs.slots()) {
 			if (item.peek().isPresent()) {		
@@ -372,5 +408,4 @@ public abstract class Shop {
 		}
 		return false;
 	}
-
 }

@@ -31,6 +31,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import com.carrot.carrotshop.shop.Shop;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -200,7 +201,7 @@ public class ShopsLogs {
 			if (slot.peek().isPresent()) {
 				JsonObject item = new JsonObject();
 				item.addProperty("id", slot.peek().get().getType().getId());
-				item.addProperty("name", slot.peek().get().getTranslation().get());
+				item.addProperty("name", Shop.getItemName(slot.peek().get()).toPlain());
 				item.addProperty("quantity", slot.peek().get().getQuantity());
 				array.add(item);
 			}
