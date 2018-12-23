@@ -355,6 +355,9 @@ public abstract class Shop {
 					case "[heal]":
 						shop = new Heal(player, target);
 						break;
+					case "[cmd]":
+						shop = new Cmd(player, target);
+						break;
 					case "[deviceon]":
 						shop = new DeviceOn(player, target);
 						break;
