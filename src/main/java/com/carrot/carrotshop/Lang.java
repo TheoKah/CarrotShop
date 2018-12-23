@@ -73,6 +73,7 @@ public class Lang
 	public static String SHOP_FORMAT_BUY = "Buy %items% for %price%?";
 	public static String SHOP_FORMAT_SELL = "Sell %items% for %price%?";
 	public static String SHOP_FORMAT_TRADE = "Trade %items% and get %items%?";
+	public static String SHOP_CMD_DONE = "You can configure commands from file %id%.txt in the config folder. See console for complete path";
 
 	public static String SHOP_EMPTYHAND = "You may only use shops with empty hands";
 	public static String SHOP_EMPTY = "This shop is empty!";
@@ -112,6 +113,12 @@ public class Lang
 	public static String SHOP_DEVICE_OTHER = "%player% used your [%type%] sign for %price%";
 	public static String SHOP_DEVICE_OTHER_TAX = "%player% used your [%type%] sign for %price%. With %tax%% tax you get %tprice%";
 	public static String SHOP_DEVICE_OTHER_NOECON = "%player% used your [%type%] sign";
+	public static String SHOP_CMD_HELP = "Execute command for %price%?";
+	public static String SHOP_CMD_HELP_NOECON = "Execute command?";
+	public static String SHOP_CMD = "Command executed for %price%";
+	public static String SHOP_CMD_NOECON = "Command executed";
+	public static String SHOP_CMD_ERROR = "Error with command file. Let an admin know";
+	public static String SHOP_CMD_ERROR_FILE404 = "Command file not found. Let an admin know";
 	
 	public static String CONSOLE_ERROR_PLAYER = "Need to be a player";
 	public static String CONSOLE_ERROR_LOAD = "Errors occured while loading CarrotShops";
