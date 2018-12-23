@@ -28,7 +28,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @ConfigSerializable
 public class Cmd extends Shop {
 	@Setting
-	private UUID id;
+	private String id;
 	@Setting
 	private float price;
 	
@@ -42,7 +42,7 @@ public class Cmd extends Shop {
 		if (!player.hasPermission("carrotshop.admin.cmd"))
 			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 
-		id = UUID.randomUUID();
+		id = sign.getExtent().getName() + "_" + sign.getBlockX() + "_" + sign.getBlockY() + "_"+ sign.getBlockY();
 		File cmdFile = new File(ShopsData.getCmdsDirs(), id + ".txt");
 		try {
 			cmdFile.createNewFile();
@@ -86,7 +86,7 @@ public class Cmd extends Shop {
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(cmdFile))) {
 			for(String line; (line = br.readLine()) != null; ) {
-		       Sponge.getCommandManager().process(Sponge.getServer().getConsole(), line);
+		       Sponge.getCommandManager().process(Sponge.getServer().getConsole(), line.replace("%player%", player.getName()));
 		    }
 		} catch (FileNotFoundException e) {
 			CarrotShop.getLogger().info("Cmd file not found: " + cmdFile.getAbsolutePath());
