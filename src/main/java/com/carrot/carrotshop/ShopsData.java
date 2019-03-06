@@ -47,8 +47,10 @@ public class ShopsData {
 
 	public static void init(File rootDir) throws IOException
 	{
+		cmdsDir = new File(rootDir, "cmds");
+		cmdsDir.mkdirs();
+		
 		carrotshopsFile = new File(rootDir, "shops.json");
-		rootDir.mkdirs();
 		carrotshopsFile.createNewFile();
 		cmdsDir = new File(rootDir, "cmds");
 		cmdsDir.mkdirs();
@@ -275,6 +277,7 @@ public class ShopsData {
 		}
 		return ret;
 	}
+
 	public static File getCmdsDirs() {
 		return cmdsDir;
 	}

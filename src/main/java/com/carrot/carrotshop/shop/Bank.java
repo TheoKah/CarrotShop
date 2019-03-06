@@ -12,8 +12,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.carrot.carrotshop.CarrotShop;
-import com.carrot.carrotshop.ShopConfig;
 import com.carrot.carrotshop.Lang;
+import com.carrot.carrotshop.ShopConfig;
 
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 

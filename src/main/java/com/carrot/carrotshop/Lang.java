@@ -35,6 +35,8 @@ public class Lang
 	public static String REPORT_ERROR_DATA = "No data found to generate report";
 	public static String REPORT_ERROR_PERM = "You do not have permission to generate reports";
 	public static String REPORT_ERROR_OPERM = "You do not have permission to generate reports for other players";
+	public static String REPORT_ERROR_SERVER = "Unable to push data to the server";
+	public static String REPORT_URL = "http://carrotshop.xyz/%id%.htm";
 
 	public static String CURRENCY_VALUE = "Shop currency set to %name%";
 	public static String CURRENCY_SERVER = "Shop currency set to match server's config";

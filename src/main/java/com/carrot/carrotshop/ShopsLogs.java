@@ -220,7 +220,7 @@ public class ShopsLogs {
 				return;
 			}
 
-			String url = "https://carrotshop-ffb97.firebaseio.com/shop.json";
+			String url = "http://carrotshop.xyz/create.php";
 			String charset = java.nio.charset.StandardCharsets.UTF_8.name();
 
 			HttpURLConnection connection = null;
@@ -230,7 +230,7 @@ public class ShopsLogs {
 				connection.setDoOutput(true);
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Accept-Charset", charset);
-				connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
+				connection.setRequestProperty("Content-Type", "application/json;charset=" + charset);
 
 
 				OutputStream output = connection.getOutputStream();	
@@ -247,8 +247,13 @@ public class ShopsLogs {
 				JsonElement jelement = new JsonParser().parse(sb.toString());
 				JsonObject  jobject = jelement.getAsJsonObject();
 
+				if (jobject.get("status").getAsString().equals("error")) {
+					src.sendMessage(Text.of(TextColors.DARK_RED, Lang.REPORT_ERROR_SERVER));
+					CarrotShop.getLogger().error(Lang.CONSOLE_ERROR_GENERIC.replace("%error%", jobject.get("error").getAsString()));
+					return ;
+				}
 
-				String reportURL = "http://carrotshop.xyz/" + jobject.get("name").getAsString() + ".htm";
+				String reportURL = Lang.REPORT_URL.replace("%id%", jobject.get("id").getAsString());
 
 				src.sendMessage(Text.of(TextColors.GOLD, Lang.split(Lang.REPORT_READY, "%url%", 0),
 						Text.builder(reportURL)

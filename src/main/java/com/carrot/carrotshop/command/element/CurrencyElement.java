@@ -3,7 +3,6 @@ package com.carrot.carrotshop.command.element;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.service.economy.Currency;

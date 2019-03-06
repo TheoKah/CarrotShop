@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -32,7 +31,7 @@ public class Cmd extends Shop {
 	@Setting
 	private float price;
 	
-	static private String type = "Heal";
+	static private String type = "Cmd";
 
 	public Cmd() {
 	}
