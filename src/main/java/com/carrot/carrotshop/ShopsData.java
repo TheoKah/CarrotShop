@@ -37,6 +37,7 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 
 public class ShopsData {
 	private static File carrotshopsFile;
+	private static File cmdsDir;
 	private static ConfigurationNode shopsNode;
 	private static ConfigurationLoader<CommentedConfigurationNode> loader;
 	private static Map<Location<World>, List<Shop>> shops = new HashMap<>();
@@ -46,8 +47,10 @@ public class ShopsData {
 
 	public static void init(File rootDir) throws IOException
 	{
+		cmdsDir = new File(rootDir, "cmds");
+		cmdsDir.mkdirs();
+		
 		carrotshopsFile = new File(rootDir, "shops.json");
-		rootDir.mkdirs();
 		carrotshopsFile.createNewFile();
 
 		TypeSerializerCollection serializers = TypeSerializers.getDefaultSerializers().newChild();
@@ -147,6 +150,8 @@ public class ShopsData {
 							shopNode.getNode("shop").setValue(TypeToken.of(Bank.class), (Bank) shop);
 						else if (shop instanceof Heal)
 							shopNode.getNode("shop").setValue(TypeToken.of(Heal.class), (Heal) shop);
+						else if (shop instanceof Cmd)
+							shopNode.getNode("shop").setValue(TypeToken.of(Cmd.class), (Cmd) shop);
 						else if (shop instanceof DeviceOn)
 							shopNode.getNode("shop").setValue(TypeToken.of(DeviceOn.class), (DeviceOn) shop);
 						else if (shop instanceof DeviceOff)
@@ -269,5 +274,9 @@ public class ShopsData {
 			save();
 		}
 		return ret;
+	}
+
+	public static File getCmdsDirs() {
+		return cmdsDir;
 	}
 }
