@@ -59,8 +59,7 @@ public class ShopsLogs {
 		StringBuilder data = new StringBuilder();
 		data.append("{\"info\":{");
 
-		data.append("\"dbtime\":{\".sv\":\"timestamp\"}");
-		data.append(",\"time\":" + System.currentTimeMillis());
+		data.append("\"time\":" + System.currentTimeMillis());
 
 		Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
 

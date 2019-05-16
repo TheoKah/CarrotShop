@@ -41,7 +41,7 @@ public class Cmd extends Shop {
 		if (!player.hasPermission("carrotshop.admin.cmd"))
 			throw new ExceptionInInitializerError(Lang.SHOP_PERM.replace("%type%", type));
 
-		id = sign.getExtent().getName() + "_" + sign.getBlockX() + "_" + sign.getBlockY() + "_"+ sign.getBlockY();
+		id = sign.getExtent().getName() + "_" + sign.getBlockX() + "_" + sign.getBlockY() + "_"+ sign.getBlockZ();
 		File cmdFile = new File(ShopsData.getCmdsDirs(), id + ".txt");
 		try {
 			cmdFile.createNewFile();
