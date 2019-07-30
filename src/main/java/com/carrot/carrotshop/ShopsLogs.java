@@ -219,7 +219,7 @@ public class ShopsLogs {
 				return;
 			}
 
-			String url = "http://carrotshop.xyz/create.php";
+			String url = "https://carrotshop.xyz/create.php";
 			String charset = java.nio.charset.StandardCharsets.UTF_8.name();
 
 			HttpURLConnection connection = null;
