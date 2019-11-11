@@ -47,6 +47,8 @@ public class PlayerClickListener {
 			shops.get().forEach((shop) -> {
 				if (shop.getLocation().equals(optLoc.get())) {
 					shop.trigger(player);
+					if (!shop.isOwner(player))
+						event.setCancelled(true);
 					Sponge.getScheduler().createTaskBuilder().delayTicks(4).execute(
 							task -> {
 								shop.update();
@@ -67,8 +69,11 @@ public class PlayerClickListener {
 		Optional<List<Shop>> shops = ShopsData.getShops(optLoc.get());
 		if (shops.isPresent()) {
 			shops.get().forEach((shop) -> {
-				if (shop.getLocation().equals(optLoc.get()))
+				if (shop.getLocation().equals(optLoc.get())) {
 					shop.info(player);
+					if (!shop.isOwner(player))
+						event.setCancelled(true);
+				}
 			});
 		}
 	}

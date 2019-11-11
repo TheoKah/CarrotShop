@@ -104,7 +104,7 @@ public abstract class Shop {
 		return owner;
 	}
 
-	protected final boolean isOwner(Player player) {
+	public final boolean isOwner(Player player) {
 		if (owner != null) {
 			if (owner.equals(player.getUniqueId()))
 				return true;
